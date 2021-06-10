@@ -29,33 +29,31 @@ class LoginService extends Service {
     }
   }
 
-  async _checkActiveUser(user) {
-    if (!user.active) {
-      this._throwUnalthorizedError("User is Not Active")
-    }
-  }
-
   async authenticate(fields) {
     await this._checkRequiredFields(this._authenticateRequiredFields, fields)
     const user = await User.findOne({
       where: {
         username: fields.username
       },
+      include: ['profile'],
     })
 
     await this._checkUserEntityExsits(user, "Username or Password")
-    await this._checkActiveUser(user)
     await this._checkPassword(user, fields.password)
 
-    const accessToken = await this._jwtImplementation.generateAccessToken(user.id, user.admin)
-    const refreshToken = await this._jwtImplementation.generateRefreshToken(user.id, user.admin)
+    
+
+    const accessToken = await this._jwtImplementation.generateAccessToken(user.id, user.profile.admin)
+    const refreshToken = await this._jwtImplementation.generateRefreshToken(user.id, user.profile.admin)
     return {
       id: user.id,
       fullName: user.fullName,
-      email: user.email,
-      admin: user.admin,
       username: user.username,
-      active: user.active,
+      profile: {
+        name: user.profile.name,
+        admin: user.profile.admin,
+        teamManager: user.profile.teamManager,
+      },
       tokens: {
         accessToken,
         refreshToken

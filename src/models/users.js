@@ -5,13 +5,14 @@ const { v4: uuidV4 } = require('uuid')
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
 
 module.exports = (sequelize, DataTypes) => {
-  const user = sequelize.define('users', {    
+  const user = sequelize.define('Users', {    
     fullName: DataTypes.STRING,
     username: DataTypes.STRING,
     email: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    profileId: DataTypes.UUID,
+    managerId: DataTypes.UUID,    
     password: DataTypes.STRING,
-    admin: DataTypes.BOOLEAN,
-    active: DataTypes.BOOLEAN
   }, {
     freezeTableName: true,
     hooks: {
@@ -33,6 +34,9 @@ module.exports = (sequelize, DataTypes) => {
 
   user.associate = function (models) {
     // associations can be defined here
+
+    
+
   };
   return user;
 };

@@ -11,8 +11,15 @@ const sequelize = new Sequelize(
 const db = {
     Sequelize: Sequelize,
     sequelize,
-    User: sequelize.import("./user"),
+    User: sequelize.import("./users"),
+    Profile: sequelize.import("./profiles"),
 }
+
+db.User.belongsTo(db.Profile, {
+    foreignKey: 'profileId',
+    targetKey: 'id',
+    as: 'profile'
+})
 
 Object.keys(db).forEach(model => {
     if ("associate" in db[model]) {

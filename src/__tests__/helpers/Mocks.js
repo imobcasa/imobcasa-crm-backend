@@ -29,15 +29,27 @@ class Mocks {
     }
   }
 
-  mockUser(admin = true, username = "mockedUser") {
+  mockUser(
+    username = "mockedUser", 
+    profileId = "", 
+    managerId = ""
+    ) {
     return {
-      username: username,
+      username,
       fullName: "ValidFullName",
       email: "valid@email.com",
+      phone: '11912341234',
       password: "validPassword",
-      passwordConfirmation: "validPassword",
-      admin: admin,
-      active: true,
+      profileId,
+      managerId
+    }
+  }
+
+  mockProfile(name = "", admin = false, teamManager = false) {
+    return { 
+      name,
+      admin,
+      teamManager
     }
   }
 

@@ -20,10 +20,7 @@ class ModelsExpected {
     return {
       id: expect.any(String),
       fullName: expect.any(String),
-      email: expect.any(String),
-      admin: expect.any(Boolean),
       username: expect.any(String),
-      active: expect.any(Boolean),
       tokens: {
         accessToken: expect.any(String),
         refreshToken: expect.any(String)

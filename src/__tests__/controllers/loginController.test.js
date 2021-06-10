@@ -1,7 +1,7 @@
 const {LoginController} = require('../../controllers')
 const loginController = new LoginController()
 const { invalidParamError, missingParamError } = require('../../helpers/Errors')
-const {User} = require('../../models')
+const {User, Profile} = require('../../models')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -10,18 +10,21 @@ const databaseSetup = require('../../database')
 
 describe('AUTH CONTROLLER: tests', () => {
   let user
+  let profile
   beforeAll(async () => {
     try{
       await databaseSetup()
-      user = await User.create(mocks.mockUser())
+      profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
+      user = await User.create(mocks.mockUser("mockedUser", profile.id))      
     }catch(err){
-      console.log(err.toString())
+      console.log(err)
     }
   })
   
   afterAll(async () => {
     try{
       await User.destroy({where: {}})
+      await Profile.destroy({where: {}})
     }catch(err){
       console.log(err.toString())
     }
@@ -43,7 +46,7 @@ describe('AUTH CONTROLLER: tests', () => {
       })  
     }
     for(const field of requiredFields){
-      it(`Should return 401 if ${field} username has been send`, async () => {
+      it(`Should return 401 if invalid ${field} username has been send`, async () => {
         const fakeUser = mocks.mockUser()
         fakeUser[`${field}`] = 'invalidParameter'
         const req = mocks.mockReq(fakeUser)
