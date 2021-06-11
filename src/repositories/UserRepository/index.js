@@ -48,7 +48,7 @@ class UserRepository {
       where:
       {
         id:fields.id
-      }
+      },
     })
     return result
   }
@@ -58,6 +58,10 @@ class UserRepository {
       where: {
         id: fields.id
       },
+      attributes: {
+        exclude: ['password']
+      },
+      include: ['profile']
     })
     return user
   }
