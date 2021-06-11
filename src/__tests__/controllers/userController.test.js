@@ -25,7 +25,7 @@ describe('USER CONTROLLER: tests', () => {
   let user2
   // let userId = ""
   // let userPwd = "validPassword"
-  
+
   beforeAll(async () => {
     try {
       profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
@@ -51,28 +51,28 @@ describe('USER CONTROLLER: tests', () => {
   describe("LIST User tests", () => {
     it("Should return 400 if no x-profile Header has been provided", async () => {
       const req = mocks.mockReq(null, null, null, null, {
-        'Authorization': 'Bearer '+ token
+        'Authorization': 'Bearer ' + token
       })
       const res = mocks.mockRes()
       await userController._list(req, res)
-      expect(res.status).toHaveBeenCalledWith(400)      
+      expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError('x-profiles')
       expect(res.json).toHaveBeenCalledWith(error)
     })
     it("Should return 400 if x-profile Header has been provided without values", async () => {
       const req = mocks.mockReq(null, null, null, null, {
-        'Authorization': 'Bearer '+ token,
+        'Authorization': 'Bearer ' + token,
         'x-profiles': null
       })
       const res = mocks.mockRes()
       await userController._list(req, res)
-      expect(res.status).toHaveBeenCalledWith(400)      
+      expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError('x-profiles')
       expect(res.json).toHaveBeenCalledWith(error)
     })
     it("Should return 200 if profile has been provided and with users of profile provided", async () => {
       const req = mocks.mockReq(null, null, null, null, {
-        'Authorization': 'Bearer '+ token,
+        'Authorization': 'Bearer ' + token,
         'x-profiles': [profile2.name.toUpperCase()]
       })
       const res = mocks.mockRes()
@@ -88,6 +88,21 @@ describe('USER CONTROLLER: tests', () => {
         profileId: user.profileId
       })]))
     })
+  })
+
+  describe('CREATE USER Tests', () => {
+    const requiredFields = ['fullName', 'username', 'profileId', 'password']
+    for (const field of requiredFields) {
+      test(`POST: Should return 400 if no ${field} has beem send`, async () => {
+        const user = mocks.mockUser()
+        delete user[`${field}`]
+        const res = mocks.mockRes()
+        const req = mocks.mockReq(user)
+        await userController._create(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toBeCalledWith(`MissingParamError: ${field}`)
+      })
+    }
   })
 
   // describe('POST User tests', () => {
