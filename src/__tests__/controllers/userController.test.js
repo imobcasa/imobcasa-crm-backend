@@ -23,8 +23,6 @@ describe('USER CONTROLLER: tests', () => {
 
   let profile2
   let user2
-  // let userId = ""
-  // let userPwd = "validPassword"
 
   beforeAll(async () => {
     try {
