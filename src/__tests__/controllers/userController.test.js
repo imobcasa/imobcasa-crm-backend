@@ -344,76 +344,33 @@ describe('USER CONTROLLER: tests', () => {
     })
   })
 
-  // describe('DELETE User tests', () => {
-  //   test('DELETE: Should return 400 if no id has beem send', async () => {
-  //     const user = mocks.mockUser()
-  //     delete user.id
-  //     delete user.username
-  //     const res = mocks.mockRes()
-  //     const req = mocks.mockReq(user)
-  //     await userController._delete(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     expect(res.json).toBeCalledWith('MissingParamError: id')
-  //   })
-  //   test('DELETE: Should return 400 if invalid id has beem send', async () => {
-  //     const user = mocks.mockUser()
-  //     user.id = 'invalidId'
-  //     const res = mocks.mockRes()
-  //     const req = mocks.mockReq(null, null, { id: "invalid user id" }, null)
-  //     await userController._delete(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     expect(res.json).toBeCalledWith('InvalidParamError: id')
-  //   })
-  //   test('DELETE: Should return 200 username has beem deleted by id', async () => {
-  //     const res = mocks.mockRes()
-  //     const req = mocks.mockReq(null, null, { id: userId }, null)
-  //     await userController._delete(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(200)
-  //     expect(res.json).toBeCalledWith(1)
-  //   })
-  // })
+  describe('DELETE User tests', () => {
+    test('DELETE: Should return 400 if no id has beem send', async () => {
+      const user = mocks.mockUser()
+      delete user.id
+      delete user.username
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
+      await userController._delete(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith('MissingParamError: id')
+    })
+    test('DELETE: Should return 400 if invalid id has beem send', async () => {
+      const user = mocks.mockUser()
+      user.id = 'invalidId'
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, { id: "invalid user id" }, null)
+      await userController._delete(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith('InvalidParamError: id')
+    })
+    test('DELETE: Should return 200 username has beem deleted by id', async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, { id: user2.id }, null)
+      await userController._delete(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toBeCalledWith(1)
+    })
+  })
 
-  // describe('GET USER BY ID', () => {
-  //   let userId = ""
-  //   beforeAll(async () => {
-  //     try {
-  //       const user = await User.create(mocks.mockUser())
-  //       userId = user.id
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   })
-
-  //   afterAll(async () => {
-  //     try {
-  //       await User.destroy({ where: {} })
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   })
-
-  //   test("Should return 400 if no id has been send", async () => {
-  //     const req = mocks.mockReq()
-  //     const res = mocks.mockRes()
-  //     await userController._getOne(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     const { error } = missingParamError('id')
-  //     expect(res.json).toHaveBeenCalledWith(error)
-  //   })
-  //   test("Should return 400 if invalid id has been send", async () => {
-  //     const req = mocks.mockReq(null, null, { id: "invalid user id" }, null)
-  //     const res = mocks.mockRes()
-  //     await userController._getOne(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     const { error } = invalidParamError('id')
-  //     expect(res.json).toHaveBeenCalledWith(error)
-  //   })
-  //   test('Should return 200 if user has been found', async () => {
-  //     const req = mocks.mockReq(null, null, { id: userId }, null)
-  //     const res = mocks.mockRes()
-  //     await userController._getOne(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(200)
-  //     expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
-  //   })
-  // })
 })
