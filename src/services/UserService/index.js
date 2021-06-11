@@ -9,6 +9,7 @@ class UserService extends Service {
   _changePasswordRequiredFields = ['password', 'newPassword', 'reqUserId', 'admin']
   _resetPasswordRequiredFields = ['password', 'id']
   _listRequiredFields = ['x-profiles']
+  _createRequiredFields = ['fullName', 'username', 'profileId', 'password']
 
   constructor(){
     super()
@@ -30,8 +31,27 @@ class UserService extends Service {
 
 
   async createUser(fields) {
-    await this._checkRequiredFields(this._requiredFields, fields)
-    return await this._userRepository.create(fields)
+    await this._checkRequiredFields(this._createRequiredFields, fields)
+    const {
+      fullName,
+      username,
+      email,
+      phone,
+      profileId,
+      managerId,
+      password      
+    } = fields
+
+    
+    return await this._userRepository.create({
+      fullName,
+      username,
+      email,
+      phone,
+      profileId,
+      managerId,
+      password      
+    })
   }
 
   async list(fields) {

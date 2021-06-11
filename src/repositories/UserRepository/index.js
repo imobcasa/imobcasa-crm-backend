@@ -6,7 +6,11 @@ const { User } = require('../../models')
 class UserRepository {
 
   async create(fields){
-    const user = await User.create(fields)
+    const user = await User.create(fields, {
+      attributes: {
+        exclude: ['password']
+      }
+    })
     delete user.password
     return user
   }
