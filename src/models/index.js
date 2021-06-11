@@ -13,12 +13,23 @@ const db = {
     sequelize,
     User: sequelize.import("./users"),
     Profile: sequelize.import("./profiles"),
+    Customer: sequelize.import("./customers")
 }
 
 db.User.belongsTo(db.Profile, {
     foreignKey: 'profileId',
     targetKey: 'id',
     as: 'profile'
+})
+
+db.Customer.belongsTo(db.User, {
+    foreignKey: 'userId',
+    targetKey: 'id',
+    as: 'user'
+})
+
+db.User.hasMany(db.Customer, {
+    onDelete: 'CASCADE'
 })
 
 Object.keys(db).forEach(model => {
