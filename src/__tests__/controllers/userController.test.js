@@ -132,6 +132,33 @@ describe('USER CONTROLLER: tests', () => {
       const { error } = invalidParamError('id')
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test('Should return 200 if valid id has been provided', async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, {
+        id: user.id
+      })
+      await userController._getOne(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        id: expect.any(String),
+        email: expect.any(String),
+        fullName: expect.any(String),        
+        managerId: expect.any(String),
+        phone: expect.any(String),
+        profile: expect.objectContaining({                    
+          id: expect.any(String),
+          name: expect.any(String),
+          admin: expect.any(Boolean),
+          teamManager: expect.any(Boolean),
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        }),
+        profileId: expect.any(String),
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
+        username: expect.any(String),
+      }))
+    })
   })
 
   // describe('GET User tests', () => {
