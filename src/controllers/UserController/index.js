@@ -163,8 +163,7 @@ class UserController {
   async resetPassword(req, res) {
     try {
       const userService = new UserService()
-      console.log(req.params)
-      const result = await userService.resetPassword({
+      await userService.resetPassword({
         ...req.params,
         ...req.body
       })
