@@ -37,8 +37,10 @@ class UserRepository {
     user.fullName = fields.fullName
     user.username = fields.username
     user.email = fields.email
-    user.admin = fields.admin
-    user.active = fields.active
+    user.phone = fields.phone
+    user.profileId = fields.profileId
+    user.managerId = fields.managerId
+
     await user.save()
     return user
   }
