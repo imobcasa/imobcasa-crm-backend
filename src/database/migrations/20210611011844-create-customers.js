@@ -43,10 +43,11 @@ module.exports = {
       },
       userId: {
         type: Sequelize.UUID,
-        refernces: {
+        references: {
           model: 'Users',
           key: 'id'
-        }
+        },
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
