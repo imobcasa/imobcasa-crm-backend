@@ -179,7 +179,7 @@ describe('USER CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('InvalidParamError: id')
     })
-    test('PUT: Should return 200 username has beem updated', async () => {
+    test('PUT: Should return 200 user has beem updated', async () => {
       const userToUpdate = {
         id: user.id,
         username: "AdminUsernameUpdated",
