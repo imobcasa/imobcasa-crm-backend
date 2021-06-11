@@ -29,7 +29,7 @@ describe('USER CONTROLLER: tests', () => {
   beforeAll(async () => {
     try {
       profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
-      user = await User.create(mocks.mockUser("administrador", profile.id))
+      user = await User.create(mocks.mockUser("administrador", profile.id), { raw: true })
       token = await mocks.mockJwtToken(user.id)
 
       profile2 = await Profile.create(mocks.mockProfile("Corretor", true, false))
@@ -161,46 +161,44 @@ describe('USER CONTROLLER: tests', () => {
     })
   })
 
-  // describe('GET User tests', () => {
-  //   test('GET: Should return 200', async () => {
-  //     const res = mocks.mockRes()
-  //     const req = mocks.mockReq()
-  //     await userController._list(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(200)
-  //     expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.userModel())]))
-  //   })
-  // })
-
-  // describe('PUT User tests', () => {
-  //   test('PUT: Should return 400 if no id has beem send', async () => {
-  //     const user = mocks.mockUser()
-  //     delete user.username
-  //     const res = mocks.mockRes()
-  //     const req = mocks.mockReq(user)
-  //     await userController._update(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     expect(res.json).toBeCalledWith('MissingParamError: id')
-  //   })
-  //   test('PUT: Should return 400 if invalid id has beem send', async () => {
-  //     const user = mocks.mockUser()
-  //     user.id = 'invalidId'
-  //     user.username = 'invalidUsername'
-  //     const res = mocks.mockRes()
-  //     const req = mocks.mockReq(user)
-  //     await userController._update(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     expect(res.json).toBeCalledWith('InvalidParamError: id')
-  //   })
-  //   test('PUT: Should return 200 username has beem updated', async () => {
-  //     const user = mocks.mockUser()
-  //     user.id = userId
-  //     const res = mocks.mockRes()
-  //     const req = mocks.mockReq(user)
-  //     await userController._update(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(200)
-  //     expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
-  //   })
-  // })
+  describe('UPDATE User tests', () => {
+    test('PUT: Should return 400 if no id has beem send', async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq()
+      await userController._update(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith('MissingParamError: id')
+    })
+    test('PUT: Should return 400 if invalid id has beem send', async () => {
+      const user = mocks.mockUser()
+      user.id = 'invalidId'
+      user.username = 'invalidUsername'
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
+      await userController._update(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith('InvalidParamError: id')
+    })
+    test('PUT: Should return 200 username has beem updated', async () => {
+      const userToUpdate = {
+        id: user.id,
+        username: "AdminUsernameUpdated",
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        profileId: profile2.id,
+        managerId: ""
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(userToUpdate)
+      await userController._update(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        username: "AdminUsernameUpdated",
+        profileId: profile2.id
+      }))
+    })
+  })
 
   // describe('CHANGE PWD tests', () => {
   //   const requiredFields = ['password', 'newPassword']
