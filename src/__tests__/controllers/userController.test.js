@@ -103,6 +103,14 @@ describe('USER CONTROLLER: tests', () => {
         expect(res.json).toBeCalledWith(`MissingParamError: ${field}`)
       })
     }
+    test('POST: Should return 200 if user has been created', async () => {
+      const user = mocks.mockUser("newUser", profile.id)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
+      await userController._create(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
+    })
   })
 
   // describe('POST User tests', () => {

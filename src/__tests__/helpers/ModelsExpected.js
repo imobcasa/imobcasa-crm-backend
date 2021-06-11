@@ -4,14 +4,12 @@ class ModelsExpected {
 
   userModel() {
     return {
-      active: expect.any(Boolean),
-      createdAt: expect.any(Date),
-      email: expect.any(String),
       fullName: expect.any(String),
-      id: expect.any(String),
-      admin: expect.any(Boolean),
-      updatedAt: expect.any(Date),
       username: expect.any(String),
+      email: expect.any(String),
+      phone: expect.any(String),
+      profileId: expect.any(String),
+      managerId: expect.any(String),    
     }
   }
 
