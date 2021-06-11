@@ -200,101 +200,101 @@ describe('USER CONTROLLER: tests', () => {
     })
   })
 
-  // describe('CHANGE PWD tests', () => {
-  //   const requiredFields = ['password', 'newPassword']
-  //   for (const field of requiredFields) {
-  //     test(`Should return 400 if no ${field} has been provided`, async () => {
-  //       const body = mocks.mockPwdChange("validPassword", "newValidPassword")
-  //       const locals = {
-  //         reqUserId: userId,
-  //         admin: true
-  //       }
-  //       delete body[`${field}`]
-  //       const req = mocks.mockReq(body, null, null, locals)
-  //       const res = mocks.mockRes()
-  //       const { error } = missingParamError(field)
-  //       await userController.changePassword(req, res)
-  //       expect(res.status).toHaveBeenCalledWith(400)
-  //       expect(res.json).toHaveBeenCalledWith(error)
-  //     })
-  //   }
-  //   test(`Should return 400 if no reqUserID has been provided`, async () => {
-  //     const body = mocks.mockPwdChange("validPassword", "newValidPassword")
-  //     const locals = {
-  //       admin: true
-  //     }
-  //     const req = mocks.mockReq(body, null, null, locals)
-  //     const res = mocks.mockRes()
-  //     const { error } = missingParamError('reqUserId')
-  //     await userController.changePassword(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     expect(res.json).toHaveBeenCalledWith(error)
+  describe('CHANGE PWD tests', () => {
+    const requiredFields = ['password', 'newPassword']
+    for (const field of requiredFields) {
+      test(`Should return 400 if no ${field} has been provided`, async () => {
+        const body = mocks.mockPwdChange("validPassword", "newValidPassword")
+        const locals = {
+          reqUserId: user.id,
+          admin: true
+        }
+        delete body[`${field}`]
+        const req = mocks.mockReq(body, null, null, locals)
+        const res = mocks.mockRes()
+        const { error } = missingParamError(field)
+        await userController.changePassword(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
+    test(`Should return 400 if no reqUserID has been provided`, async () => {
+      const body = mocks.mockPwdChange("validPassword", "newValidPassword")
+      const locals = {
+        admin: true
+      }
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      const { error } = missingParamError('reqUserId')
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
 
-  //   })
-  //   test(`Should return 400 if no admin has been provided`, async () => {
-  //     const body = mocks.mockPwdChange("validPassword", "newValidPassword")
-  //     const locals = {
-  //       reqUserId: userId,
-  //     }
-  //     const req = mocks.mockReq(body, null, null, locals)
-  //     const res = mocks.mockRes()
-  //     const { error } = missingParamError('admin')
-  //     await userController.changePassword(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if no admin has been provided`, async () => {
+      const body = mocks.mockPwdChange("validPassword", "newValidPassword")
+      const locals = {
+        reqUserId: user2.id,
+      }
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      const { error } = missingParamError('admin')
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
 
-  //   })
-  //   test("Should return 400 if invalid requserId has been provided", async () => {
-  //     const body = mocks.mockPwdChange("validPassword", "newValidPassword")
-  //     const locals = {
-  //       reqUserId: "invalid userID",
-  //       admin: true
-  //     }
-  //     const req = mocks.mockReq(body, null, null, locals)
-  //     const res = mocks.mockRes()
-  //     const { error } = invalidParamError('reqUserId')
-  //     await userController.changePassword(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     expect(res.json).toHaveBeenCalledWith(error)
-  //   })
-  //   test("Should return 401 if invalid password has been provided", async () => {
-  //     const body = mocks.mockPwdChange("invalidPassword", "newValidPassword")
-  //     const locals = {
-  //       reqUserId: userId,
-  //       admin: true
-  //     }
-  //     const req = mocks.mockReq(body, null, null, locals)
-  //     const res = mocks.mockRes()
-  //     const { error } = invalidParamError('password')
-  //     await userController.changePassword(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(401)
-  //     expect(res.json).toHaveBeenCalledWith(error)
-  //   })
-  //   test("Should return 400 if invalid newPassword has been provided", async () => {
-  //     const body = mocks.mockPwdChange("validPassword", "validPassword")
-  //     const locals = {
-  //       reqUserId: userId,
-  //       admin: true
-  //     }
-  //     const req = mocks.mockReq(body, null, null, locals)
-  //     const res = mocks.mockRes()
-  //     const { error } = invalidParamError('password')
-  //     await userController.changePassword(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     expect(res.json).toHaveBeenCalledWith(error)
-  //   })
-  //   test("Should return 204 if password has been changed", async () => {
-  //     const body = mocks.mockPwdChange("validPassword", "newValidPassword")
-  //     const locals = {
-  //       reqUserId: userId,
-  //       admin: true
-  //     }
-  //     const req = mocks.mockReq(body, null, null, locals)
-  //     const res = mocks.mockRes()
-  //     await userController.changePassword(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(204)
-  //   })
-  // })
+    })
+    test("Should return 400 if invalid requserId has been provided", async () => {
+      const body = mocks.mockPwdChange("validPassword", "newValidPassword")
+      const locals = {
+        reqUserId: "invalid userID",
+        admin: true
+      }
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError('reqUserId')
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test("Should return 401 if invalid password has been provided", async () => {
+      const body = mocks.mockPwdChange("invalidPassword", "newValidPassword")
+      const locals = {
+        reqUserId: user.id,
+        admin: true
+      }
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError('password')
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(401)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test("Should return 400 if invalid newPassword has been provided", async () => {
+      const body = mocks.mockPwdChange("validPassword", "validPassword")
+      const locals = {
+        reqUserId: user.id,
+        admin: true
+      }
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError('password')
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test("Should return 204 if password has been changed", async () => {
+      const body = mocks.mockPwdChange("validPassword", "newValidPassword")
+      const locals = {
+        reqUserId: user.id,
+        admin: true
+      }
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(204)
+    })
+  })
 
   // describe('RESET PWD tests', () => {
   //   test(`Should return 400 if no id has been provided`, async () => {
