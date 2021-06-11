@@ -12,7 +12,6 @@ class UserController {
   routes = Router()
   basePath = "/users"
   getOnePath = `${this.basePath}/:id`
-  searchPath = `${this.basePath}/search`
   changePwdPath = '/me/password'
   resetPwdPath = `${this.getOnePath}/password/reset`
 
@@ -37,10 +36,6 @@ class UserController {
       .all(this.authorizationMid.checkAdminPrivileges)
       .get(this._getOne)
 
-    this.routes.route(this.searchPath)
-      .all(this.authenticationMid.checkAuthentication)
-      .all(this.authorizationMid.checkAdminPrivileges)
-      .get(this._search)
 
     this.routes.route(this.changePwdPath)
       .all(this.authenticationMid.checkAuthentication)
@@ -92,7 +87,7 @@ class UserController {
   async _list(req, res) {
     try {
       const userService = new UserService()
-      const users = await userService.findAll()
+      const users = await userService.list(req.headers)
       return res.status(200).json(users)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -141,14 +136,6 @@ class UserController {
         const { statusCode, body } = internalError(error)
         return res.status(statusCode).send(body)
       }
-    }
-  }
-
-  async _search(req, res) {
-    try {
-      console.log("teste")
-    } catch (error) {
-
     }
   }
 

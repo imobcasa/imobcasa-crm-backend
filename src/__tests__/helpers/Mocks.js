@@ -70,8 +70,8 @@ class Mocks {
 
   async mockJwtToken(id) {
     const jwtImplementation = new JwtImplementation()
-    const user = await User.findOne({ where: { id: id } })
-    return await jwtImplementation.generateAccessToken(user.id, user.admin)
+    const user = await User.findOne({ where: { id: id }, include: ['profile'] })
+    return await jwtImplementation.generateAccessToken(user.id, user.profile.admin)
   }
 
   async mockRefreshToken(id) {

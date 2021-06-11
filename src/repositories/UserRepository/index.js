@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const { User } = require('../../models')
 
 
@@ -10,6 +11,15 @@ class UserRepository {
     return user
   }
   
+  async list(){
+    return await User.findAll({
+      attributes: {
+        exclude: ['password']
+      },
+      include: ['profile'],
+    })
+  }
+
   async findAll(){
     const users = await User.findAll({
       attributes: {

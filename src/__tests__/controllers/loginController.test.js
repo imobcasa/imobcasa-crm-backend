@@ -15,7 +15,7 @@ describe('AUTH CONTROLLER: tests', () => {
     try{
       await databaseSetup()
       profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
-      user = await User.create(mocks.mockUser("mockedUser", profile.id))      
+      user = await User.create(mocks.mockUser("mockedUser", profile.id))
     }catch(err){
       console.log(err)
     }

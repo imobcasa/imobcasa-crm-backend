@@ -8,8 +8,8 @@ class AuthorizationService extends Service {
 
 
   async _checkUserAdminPrivileges(id){
-    const user = await User.findOne({ where: { id: id } })
-    if (!user.admin) {
+    const user = await User.findOne({ where: { id: id }, include: ['profile'] })
+    if (!user.profile.admin) {
       this._throwForbidenError("authorization")      
     }
   }
