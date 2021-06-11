@@ -113,28 +113,26 @@ describe('USER CONTROLLER: tests', () => {
     })
   })
 
-  // describe('POST User tests', () => {
-  //   const requiredFields = ['fullName', 'username', 'email', 'password', 'admin', 'active']
-  //   for (const field of requiredFields) {
-  //     test(`POST: Should return 400 if no ${field} has beem send`, async () => {
-  //       const user = mocks.mockUser()
-  //       delete user[`${field}`]
-  //       const res = mocks.mockRes()
-  //       const req = mocks.mockReq(user)
-  //       await userController._create(req, res)
-  //       expect(res.status).toHaveBeenCalledWith(400)
-  //       expect(res.json).toBeCalledWith(`MissingParamError: ${field}`)
-  //     })
-  //   }
-  //   test('POST: Should return 200 if user has been created', async () => {
-  //     const user = mocks.mockUser()
-  //     const res = mocks.mockRes()
-  //     const req = mocks.mockReq(user)
-  //     await userController._create(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(200)
-  //     expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
-  //   })
-  // })
+  describe('GET USER Tests', () => {
+    test('Should return 400 if no id has been provided', async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq()
+      await userController._getOne(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = missingParamError('id')
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test('Should return 400 if invalid id has been provided', async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, {
+        id: "invalidId"
+      })
+      await userController._getOne(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError('id')
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+  })
 
   // describe('GET User tests', () => {
   //   test('GET: Should return 200', async () => {

@@ -11,7 +11,7 @@ const { serverError } = require('../../helpers/Errors')
 class UserController {
   routes = Router()
   basePath = "/users"
-  getOnePath = `${this.basePath}/:id`
+  getOnePath = `/users/:id`
   changePwdPath = '/me/password'
   resetPwdPath = `${this.getOnePath}/password/reset`
 
