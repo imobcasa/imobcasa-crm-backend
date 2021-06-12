@@ -49,6 +49,14 @@ module.exports = {
         },
         allowNull: true
       },
+      statusId: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'CustomerStatuses',
+          key: 'id'
+        },
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

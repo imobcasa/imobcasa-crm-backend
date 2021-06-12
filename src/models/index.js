@@ -13,7 +13,8 @@ const db = {
     sequelize,
     User: sequelize.import("./users"),
     Profile: sequelize.import("./profiles"),
-    Customer: sequelize.import("./customers")
+    Customer: sequelize.import("./customers"),
+    CustomerStatuses: sequelize.import("./customerstatus")
 }
 
 db.User.belongsTo(db.Profile, {
@@ -26,6 +27,12 @@ db.Customer.belongsTo(db.User, {
     foreignKey: 'userId',
     targetKey: 'id',
     as: 'user'
+})
+
+db.Customer.belongsTo(db.CustomerStatuses, {
+    foreignKey: 'statusId',
+    targetKey: 'id',
+    as: 'status'
 })
 
 db.User.hasMany(db.Customer, {
