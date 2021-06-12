@@ -48,6 +48,16 @@ class CustomerRepository {
     })
   }
 
+  async getOne(fields, raw = false){
+    return await Customer.findOne({
+      where: {
+        id: fields.id
+      },
+      raw,
+      include: ['status', 'user']
+    })
+  }
+
 }
 
 module.exports = CustomerRepository
