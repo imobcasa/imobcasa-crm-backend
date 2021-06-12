@@ -8,6 +8,7 @@ const modelsExpected = new ModelsExpected()
 const customerController = new CustomerController
 
 const databaseSetup = require('../../database')
+const invalidParamError = require('../../helpers/Errors/invalid-param-errors')
 
 describe("CUSTOMER CONTROLLER Tests", () => {
   let user
@@ -46,9 +47,9 @@ describe("CUSTOMER CONTROLLER Tests", () => {
   
 
 
-  describe('LIST Tests', () => {
+  describe('1 - LIST Tests', () => {
 
-    it('Should return 400 if no x-status has been provided', async () => {
+    it('1.1 - Should return 400 if no x-status has been provided', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
         admin: true
@@ -60,7 +61,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it('Should return 400 if no reqUserId has been provided', async () => {
+    it('1.2 - Should return 400 if no reqUserId has been provided', async () => {
       const req = mocks.mockReq(null, null, null, {
         admin: true
       }, {
@@ -73,7 +74,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it('Should return 400 if no admin has been provided', async () => {
+    it('1.3 - Should return 400 if no admin has been provided', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
       }, {
@@ -86,7 +87,21 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it('Should return 200 and list of customers only x-status provided', async () => {
+    it('1.4 - Should return 400 if invalid x-status has been provided', async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user.id,
+        admin: true
+      }, {
+        'x-status': ['INVALID_STATUS']
+      })
+      const res = mocks.mockRes()
+      await customerController._list(req, res)
+      const { error } = invalidParamError("x-status")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('1.5 - Should return 200 and list of customers only x-status provided', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
         admin: true
