@@ -5,6 +5,7 @@ const { CustomerRepository } = require('../../repositories')
 class CustomerService extends Service {
 
   _listRequiredFields = ['x-status', 'reqUserId', 'admin']
+  
 
   constructor(){
     super()
@@ -16,6 +17,8 @@ class CustomerService extends Service {
     await this._checkRequiredFields(this._listRequiredFields, fields)
     await this._checkFieldExists(fields['x-status'], 'x-status')
     
+    
+
     return []
   }
 

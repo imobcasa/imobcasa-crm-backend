@@ -81,7 +81,7 @@ class Mocks {
   }
 
 
-  mockCustomer(userId = "") {
+  mockCustomer(userId = "", statusId = "") {
     return {
       fullName: "Customer Full Name",
       cpf: "00000000000",
@@ -94,7 +94,16 @@ class Mocks {
       productInterest: "Tatuapé",
       regionInterest: "Leste",
       biddersQuatity: 1,
-      userId
+      userId,
+      statusId
+    }
+  }
+
+  mockCustomerStatus(name = "", order = 1, key = "") {
+    return {
+      name,
+      order,
+      key,
     }
   }
 
