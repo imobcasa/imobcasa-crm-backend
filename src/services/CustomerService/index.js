@@ -5,7 +5,20 @@ const { CustomerRepository, CustomerStatusesRepository } = require('../../reposi
 class CustomerService extends Service {
 
   _listRequiredFields = ['x-status', 'reqUserId', 'admin']
-  
+  _createRequiredFields = [
+    "fullName",
+    "cpf",
+    "email",
+    "phone",
+    "birthDate",
+    "incomes",
+    "startDate",
+    "origin",
+    "productInterest",
+    "regionInterest",
+    "biddersQuatity",
+    "userId"
+  ]
 
   constructor(){
     super()
@@ -32,16 +45,18 @@ class CustomerService extends Service {
     const customerStatuses = await this._customerStatusesRepository.getStatusesKeys(true)
     const validStatuses = customerStatuses.map(status => status.key)
 
-    console.log("validStatuses", validStatuses)
-    console.log("fields['x-status']", fields['x-status'])
-
-    this._checkStatusesProvided(fields['x-status'], validStatuses)
-
-    
+    const statusesProvided = fields['x-status'].split(',')
+    this._checkStatusesProvided(statusesProvided, validStatuses)
 
     const customers = await this._customerRepository.list(true)
     
-    return customers.filter(customer => fields['x-status'].includes(customer.status.key))
+    return customers.filter(customer => statusesProvided.includes(customer.status.key))
+  }
+
+  async create(fields){
+    this._checkRequiredFields(this._createRequiredFields, fields)
+
+    return {}
   }
 
 }

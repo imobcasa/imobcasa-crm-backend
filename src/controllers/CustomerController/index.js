@@ -24,6 +24,7 @@ class CustomerController {
     this.routes.route(this.basePath)
       .all(this.authenticationMid.checkAuthentication)
       .get(this._list)
+      .post(this._create)
 
   }
 
@@ -34,6 +35,24 @@ class CustomerController {
         'x-status': req.headers['x-status'],
         ...req.locals
       })
+      return res.status(200).json(data)
+    }catch(err){
+      if(err instanceof ServiceException){
+        const {statusCode, message} = err
+        return res.status(statusCode).json(message)
+      }else {
+        console.error(err)
+        const {error} = serverError()
+        const {statusCode, body} = internalError(error)
+        return res.status(statusCode).send(body)
+      }      
+    }
+  }
+
+  async _create(req,res){
+    try{
+      const customerService = new CustomerService()
+      const data = await customerService.create(req.body)
       return res.status(200).json(data)
     }catch(err){
       if(err instanceof ServiceException){
