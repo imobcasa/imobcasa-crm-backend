@@ -5,7 +5,7 @@ class UserService extends Service {
   _requiredFields = ['fullName', 'username', 'email', 'password', 'admin', 'active']
   _updateRequiredFields = ['id']
   _deleteUserRequiredFields = ['id']
-  _getUserRequiredFields = ['id']
+  _getUserRequiredFields = ['x-user-id']
   _changePasswordRequiredFields = ['password', 'newPassword', 'reqUserId', 'admin']
   _resetPasswordRequiredFields = ['password', 'id']
   _listRequiredFields = ['x-profiles']
@@ -79,9 +79,12 @@ class UserService extends Service {
   }
 
   async getUser(fields) {
-    await this._checkRequiredFields(this._getUserRequiredFields, fields)
-    const user = await this._userRepository.getOne(fields)
-    await this._checkEntityExsits(user)
+    this._checkRequiredFields(this._getUserRequiredFields, fields)
+    this._checkFieldExists(fields['x-user-id'], 'x-user-id')
+    const user = await this._userRepository.getOne({
+      id: fields['x-user-id']
+    })
+    await this._checkEntityExsits(user, 'x-user-id')
     return user
   }
 

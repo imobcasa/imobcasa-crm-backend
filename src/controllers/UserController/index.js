@@ -11,7 +11,7 @@ const { serverError } = require('../../helpers/Errors')
 class UserController {
   routes = Router()
   basePath = "/users"
-  getOnePath = `/users/:id`
+  searchPath = `/users/search`
   changePwdPath = '/me/password'
   resetPwdPath = `${this.getOnePath}/password/reset`
 
@@ -26,15 +26,15 @@ class UserController {
     this.routes.route(this.basePath)
       .all(this.authenticationMid.checkAuthentication)
       .all(this.authorizationMid.checkAdminPrivileges)
-      .get(this._list)
+      .get(this._getOne)
       .post(this._create)
       .put(this._update)
       .delete(this._delete)
 
-    this.routes.route(this.getOnePath)
+    this.routes.route(this.searchPath)
       .all(this.authenticationMid.checkAuthentication)
       .all(this.authorizationMid.checkAdminPrivileges)
-      .get(this._getOne)
+      .get(this._list)
 
 
     this.routes.route(this.changePwdPath)
@@ -50,7 +50,9 @@ class UserController {
   async _getOne(req, res) {
     try {
       const userService = new UserService()
-      const user = await userService.getUser(req.params)
+      const user = await userService.getUser({
+        'x-user-id': req.headers['x-user-id']
+      })
       return res.status(200).json(user)
     } catch (err) {
       if (err instanceof ServiceException) {

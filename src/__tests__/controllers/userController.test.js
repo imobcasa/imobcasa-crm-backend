@@ -112,28 +112,28 @@ describe('USER CONTROLLER: tests', () => {
   })
 
   describe('GET USER Tests', () => {
-    test('Should return 400 if no id has been provided', async () => {
+    test('Should return 400 if no x-user-id has been provided', async () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      const { error } = missingParamError('id')
+      const { error } = missingParamError('x-user-id')
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    test('Should return 400 if invalid id has been provided', async () => {
+    test('Should return 400 if invalid x-user-id has been provided', async () => {
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, {
-        id: "invalidId"
+      const req = mocks.mockReq(null, null, null, null, {
+        'x-user-id': "INVALID"
       })
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      const { error } = invalidParamError('id')
+      const { error } = invalidParamError('x-user-id')
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should return 200 if valid id has been provided', async () => {
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, {
-        id: user.id
+      const req = mocks.mockReq(null, null, null, null, {
+        'x-user-id': user.id
       })
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
