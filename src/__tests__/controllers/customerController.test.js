@@ -43,7 +43,6 @@ describe("CUSTOMER CONTROLLER Tests", () => {
 
   describe('LIST Tests', () => {
 
-    const requiredFields = ['x-status', 'reqUserId', 'admin']
     it('Should return 400 if no x-status has been provided', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
@@ -65,6 +64,19 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       const res = mocks.mockRes()
       await customerController._list(req, res)
       const { error } = missingParamError("reqUserId")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('Should return 400 if no admin has been provided', async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user.id,
+      }, {
+        'x-status': ['DOC_PENDING']
+      })
+      const res = mocks.mockRes()
+      await customerController._list(req, res)
+      const { error } = missingParamError("admin")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
