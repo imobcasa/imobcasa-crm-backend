@@ -197,6 +197,19 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+
+    it('3.3 - Should return 400 if no admin has been provided', async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user.id,
+      }, {
+        'x-customer-id': customer.id
+      })
+      const res = mocks.mockRes()
+      await customerController._getOne(req, res)
+      const { error } = missingParamError('admin')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
   })
 
 })
