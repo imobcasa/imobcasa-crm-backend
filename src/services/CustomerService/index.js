@@ -20,7 +20,7 @@ class CustomerService extends Service {
     "userId"
   ]
 
-  constructor(){
+  constructor() {
     super()
     this._customerRepository = new CustomerRepository()
     this._customerStatusesRepository = new CustomerStatusesRepository()
@@ -28,42 +28,73 @@ class CustomerService extends Service {
   }
 
 
-  _checkStatusesProvided(statuses = [], validStatuses = []){
+  _checkStatusesProvided(statuses = [], validStatuses = []) {
 
-    for(const status of statuses){
-      if(!validStatuses.includes(status)){
+    for (const status of statuses) {
+      if (!validStatuses.includes(status)) {
         this._throwInvalidParamError('x-status')
       }
     }
   }
 
 
-  async list(fields){
+  async list(fields) {
     await this._checkRequiredFields(this._listRequiredFields, fields)
     await this._checkFieldExists(fields['x-status'], 'x-status')
 
-    
+
     const customerStatuses = await this._customerStatusesRepository.getStatusesKeys(true)
     const validStatuses = customerStatuses.map(status => status.key)
 
     const statusesProvided = fields['x-status'].split(',')
     this._checkStatusesProvided(statusesProvided, validStatuses)
 
-    const customers = await this._customerRepository.list(true)
-    
+    const customers = await this._customerRepository.list()
+
     return customers.filter(customer => statusesProvided.includes(customer.status.key))
   }
 
-  async create(fields){
+  async create(fields) {
     this._checkRequiredFields(this._createRequiredFields, fields)
-    
+
     const user = await this._userRepository.getOne({
       id: fields.userId
     }, ['password'], true)
 
     this._checkEntityExsits(user, 'userId')
 
-    return {}
+    const status = await this._customerStatusesRepository.getStatusByKey("DOC_PENDING")
+    
+    const {
+      fullName,
+      cpf,
+      email,
+      phone,
+      birthDate,
+      incomes,
+      startDate,
+      origin,
+      productInterest,
+      regionInterest,
+      biddersQuatity,
+      userId,   
+    } = fields
+
+    return await this._customerRepository.create({
+      fullName,
+      cpf,
+      email,
+      phone,
+      birthDate,
+      incomes,
+      startDate,
+      origin,
+      productInterest,
+      regionInterest,
+      biddersQuatity,
+      userId,   
+      statusId: status.id
+    })
   }
 
 }

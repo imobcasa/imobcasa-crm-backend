@@ -14,6 +14,18 @@ class CustomerStatusesRepository {
       raw
     })
   }
+
+  async getStatusByKey(key = "", raw = false){
+    return await CustomerStatuses.findOne({
+      attributes: {
+        exclude: ['order', 'createdAt', 'key', 'updatedAt', 'name' ]
+      },
+      raw,
+      where: {
+        key
+      }
+    })
+  }
   
   
 }
