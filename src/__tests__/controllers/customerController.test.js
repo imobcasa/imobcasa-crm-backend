@@ -233,7 +233,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
     it('3.5 - Should return 401 if requserId provided is not equal of customer userId', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user2.id,
-        admin: true
+        admin: false
       }, {
         'x-customer-id': customer.id
       })
@@ -242,6 +242,19 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       const { error } = forbidenError('id')
       expect(res.status).toHaveBeenCalledWith(403)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('3.6 - Should return 200', async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user.id,
+        admin: true
+      }, {
+        'x-customer-id': customer.id
+      })
+      const res = mocks.mockRes()
+      await customerController._getOne(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.customerModel()))
     })
   })
 
