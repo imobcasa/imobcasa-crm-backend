@@ -65,7 +65,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       const req = mocks.mockReq(null, null, null, {
         admin: true
       }, {
-        'x-status': ['DOC_PENDING']
+        'x-status': 'DOC_PENDING'
       })
       const res = mocks.mockRes()
       await customerController._list(req, res)
@@ -78,7 +78,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
       }, {
-        'x-status': ['DOC_PENDING']
+        'x-status': 'DOC_PENDING'
       })
       const res = mocks.mockRes()
       await customerController._list(req, res)
@@ -92,7 +92,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
         reqUserId: user.id,
         admin: true
       }, {
-        'x-status': ['INVALID_STATUS']
+        'x-status': 'INVALID_STATUS'
       })
       const res = mocks.mockRes()
       await customerController._list(req, res)
@@ -106,7 +106,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
         reqUserId: user.id,
         admin: true
       }, {
-        'x-status': ['DOC_PENDING']
+        'x-status': 'DOC_PENDING'
       })
       const res = mocks.mockRes()
       await customerController._list(req, res)
@@ -118,6 +118,38 @@ describe("CUSTOMER CONTROLLER Tests", () => {
         statusId: customerStatus.id
       })]))
     })
+  })
+
+  describe("2 - CREATE Tests", () => {
+    const requiredFields = [
+      "fullName",
+      "cpf",
+      "email",
+      "phone",
+      "birthDate",
+      "incomes",
+      "startDate",
+      "origin",
+      "productInterest",
+      "regionInterest",
+      "biddersQuatity",
+      "userId"
+    ]
+
+    for(const field of requiredFields){
+      it(`1.1 - Should return 400 if no ${field} has been provided`, async () => {
+        const body = mocks.mockCustomer(user.id, customerStatus2.id)
+        delete body[`${field}`]
+        const req = mocks.mockReq(body)
+        const res = mocks.mockRes()
+
+        const { error } = missingParamError(field)
+        await customerController._create(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+
+      })
+    }
 
   })
 
