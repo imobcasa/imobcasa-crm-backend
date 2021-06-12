@@ -19,6 +19,7 @@ class CustomerService extends Service {
     "biddersQuatity",
     "userId"
   ]
+  __getOneRequiuredFields = ['x-customer-id', 'reqUserId', 'admin']
 
   constructor() {
     super()
@@ -95,6 +96,13 @@ class CustomerService extends Service {
       userId,   
       statusId: status.id
     })
+  }
+
+  async getOne(fields){
+    this._checkRequiredFields(this.__getOneRequiuredFields, fields)
+    this._checkFieldExists(fields['x-customer-id'], 'x-customer-id')
+
+    return {}
   }
 
 }

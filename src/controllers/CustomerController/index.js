@@ -11,6 +11,7 @@ const ServiceException = require('../../helpers/Exceptions/ServiceException')
 class CustomerController {
   routes = Router()
   basePath = "/customers"
+  searchPath = "/customers/search"
 
   constructor() {    
     
@@ -23,8 +24,12 @@ class CustomerController {
 
     this.routes.route(this.basePath)
       .all(this.authenticationMid.checkAuthentication)
-      .get(this._list)
+      .get(this._getOne)
       .post(this._create)
+
+    this.routes.route(this.searchPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .get(this._list)
 
   }
 
@@ -53,6 +58,27 @@ class CustomerController {
     try{
       const customerService = new CustomerService()
       const data = await customerService.create(req.body)
+      return res.status(200).json(data)
+    }catch(err){
+      if(err instanceof ServiceException){
+        const {statusCode, message} = err
+        return res.status(statusCode).json(message)
+      }else {
+        console.error(err)
+        const {error} = serverError()
+        const {statusCode, body} = internalError(error)
+        return res.status(statusCode).send(body)
+      }      
+    }
+  }
+
+  async _getOne(req, res){
+    try{
+      const customerService = new CustomerService()
+      const data = await customerService.getOne({
+        'x-customer-id': req.headers['x-customer-id'],
+        ...req.locals
+      })
       return res.status(200).json(data)
     }catch(err){
       if(err instanceof ServiceException){
