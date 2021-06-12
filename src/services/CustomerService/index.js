@@ -38,10 +38,13 @@ class CustomerService extends Service {
     }
   }
 
-  _checkUserAccessToCustomer(userId, customerUserId){
-    if(userId !== customerUserId){
-      this._throwForbidenError()
+  _checkUserAccessToCustomer(userId, customerUserId, admin){
+    if(!admin){
+      if(userId !== customerUserId){
+        this._throwForbidenError()
+      }
     }
+    
   }
 
 
@@ -111,9 +114,11 @@ class CustomerService extends Service {
     const customer = await this._customerRepository.getOne({ id: fields['x-customer-id']})
     this._checkEntityExsits(customer, 'x-customer-id')
 
-    this._checkUserAccessToCustomer(fields.reqUserId, customer.userId)
+    this._checkUserAccessToCustomer(fields.reqUserId, customer.userId, fields.admin)
 
-    return {}
+    delete customer.user.password
+
+    return customer
   }
 
 }
