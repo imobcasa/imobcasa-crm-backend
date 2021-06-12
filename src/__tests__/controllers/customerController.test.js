@@ -327,6 +327,41 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
+    it('4.3 - Should return 403 if reqUserId is not equal of userId of customer finded', async () => {      
+      const body = mocks.mockCustomer(mocks.mockCustomer(user.id, customerStatus.id))
+      body.phone = "11098765432"
+      const req = mocks.mockReq(body, null, null, {
+        reqUserId: user2.id,
+        admin: false
+      }, {
+        'x-customer-id': customer.id
+      })
+      const res = mocks.mockRes()
+
+      await customerController._update(req, res)
+      const { error } = forbidenError()
+
+      expect(res.status).toHaveBeenCalledWith(403)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('4.4 - Should return 200 if reqUserId is not equal of userId of customer finded but user id admin', async () => {      
+      const body = mocks.mockCustomer(user.id, customerStatus.id)
+      body.phone = "11098765432"      
+      const req = mocks.mockReq(body, null, null, {
+        reqUserId: user2.id,
+        admin: true
+      }, {
+        'x-customer-id': customer.id
+      })
+
+      const res = mocks.mockRes()
+
+      await customerController._update(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.customerModel()))
+    })
+
   })  
 
 })
