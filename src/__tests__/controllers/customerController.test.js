@@ -309,7 +309,25 @@ describe("CUSTOMER CONTROLLER Tests", () => {
         expect(res.json).toHaveBeenCalledWith(error)
       })      
     }
-  })
+    it('4.3 - Should return 400 if invalid x-customer-id has been provided', async () => {      
+      const body = mocks.mockCustomer(mocks.mockCustomer(user.id, customerStatus.id))
+      body.phone = "11098765432"
+      const req = mocks.mockReq(body, null, null, {
+        reqUserId: user.id,
+        admin: false
+      }, {
+        'x-customer-id': "INVALID"
+      })
+      const res = mocks.mockRes()
+
+      await customerController._update(req, res)
+      const { error } = invalidParamError("x-customer-id")
+
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+  })  
 
 })
 
