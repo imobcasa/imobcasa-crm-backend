@@ -1,7 +1,7 @@
 const { invalidParamError, missingParamError, forbidenError } = require('../../helpers/Errors')
 const { AuthorizationMiddleware } = require('../../middlewares')
 const authorizationMiddleware = new AuthorizationMiddleware()
-const {User} = require('../../models')
+const {User, Profile} = require('../../models')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -15,11 +15,15 @@ const mockNext = () => {
 
 describe("AdminController tests", () => {
   const user = {}
+  let profile 
+  let profile2
   beforeAll(async () => {
-    const userAdminCreated = await User.create(mocks.mockUser(true))
+    profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
+    const userAdminCreated = await User.create(mocks.mockUser("admin", profile.id))
     user.tokenAdmin = await mocks.mockJwtToken(userAdminCreated.id)
     
-    const userCreated = await User.create(mocks.mockUser(false))
+    profile2 = await Profile.create(mocks.mockProfile("Corretor", false, false))
+    const userCreated = await User.create(mocks.mockUser("user", profile2.id))
     user.token = await mocks.mockJwtToken(userCreated.id)
 
     })
@@ -27,6 +31,7 @@ describe("AdminController tests", () => {
   afterAll(async () => {
     try{
       await User.destroy({where: {}})
+      await Profile.destroy({where: {}})
     }catch(err){
       console.log(err)
     }

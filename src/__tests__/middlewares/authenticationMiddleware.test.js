@@ -1,18 +1,20 @@
 const AuthMiddleware = require("../../middlewares/AuthenticationMiddleware")
 const authMiddleware = new AuthMiddleware()
 const { invalidParamError, missingParamError } = require('../../helpers/Errors')
-const { User } = require('../../models')
+const { User, Profile } = require('../../models')
 const databaseSetup = require('../../database')
 const Mocks = require('../helpers/Mocks')
 const mocks = new Mocks()
 
 
 describe('AUTH CONTROLLER: tests', () => {
-  let user = null
+  let user
+  let profile
   beforeAll(async () => {
     try{
       databaseSetup()
-      user = await User.create(mocks.mockUser())
+      profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
+      user = await User.create(mocks.mockUser("admin", profile.id))
     }catch(err){
       console.log(err.toString())
     }
@@ -21,6 +23,7 @@ describe('AUTH CONTROLLER: tests', () => {
   afterAll(async () => {
     try{
       await User.destroy({where: {}})
+      await Profile.destroy({where: {}})
     }catch(err){
       console.log(err.toString())
     }
