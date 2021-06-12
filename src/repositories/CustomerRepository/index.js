@@ -75,6 +75,16 @@ class CustomerRepository {
     return await customer.save()
   }
 
+  async getByPhone(phone, raw){
+    return await Customer.findOne({
+      where: {
+        phone
+      },
+      raw,
+      include: ['user', 'status']
+    })
+  }
+
 }
 
 module.exports = CustomerRepository

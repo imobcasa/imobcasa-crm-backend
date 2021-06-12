@@ -60,10 +60,17 @@ class Service {
     }
   }  
 
-  _checkEntityExsits(entity, param = "id"){
-    if (!entity) {
-      this._throwInvalidParamError(param)
+  _checkEntityExsits(entity, param = "id", invertCheck = false){
+    if(invertCheck){
+      if (entity) {
+        this._throwConflictError(param)
+      }
+    }else {
+      if (!entity) {
+        this._throwInvalidParamError(param)
+      }
     }
+    
   }
 
   _checkFieldExists(field, param = 'id'){

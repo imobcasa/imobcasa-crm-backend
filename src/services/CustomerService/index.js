@@ -90,8 +90,10 @@ class CustomerService extends Service {
 
     this._checkEntityExsits(user, 'userId')
 
-    const status = await this._customerStatusesRepository.getStatusByKey("DOC_PENDING")
+    const customer = await this._customerRepository.getByPhone(fields.phone, true)
+    this._checkEntityExsits(customer, "phone", true)
     
+    const status = await this._customerStatusesRepository.getStatusByKey("DOC_PENDING")   
     const {
       fullName,
       cpf,
@@ -148,6 +150,9 @@ class CustomerService extends Service {
     this._checkEntityExsits(customer, 'x-customer-id')
 
     this._checkUserAccessToCustomer(fields.reqUserId, customer.userId, fields.admin)
+
+    const customerSamePhone = await this._customerRepository.getByPhone(fields.phone, true)
+    this._checkEntityExsits(customerSamePhone, "phone", true)
 
 
     const { 
