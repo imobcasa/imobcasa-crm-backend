@@ -15,6 +15,8 @@ describe("CUSTOMER CONTROLLER Tests", () => {
 
   let customerStatus
   let customer
+  let customerStatus2
+  let customer2
   beforeAll(async () => {
     try{
       await databaseSetup()
@@ -23,6 +25,9 @@ describe("CUSTOMER CONTROLLER Tests", () => {
 
       customerStatus = await CustomerStatuses.create(mocks.mockCustomerStatus("Pendente de Documentação", 1, "DOC_PENDING"))
       customer = await Customer.create(mocks.mockCustomer(user.id, customerStatus.id))
+
+      customerStatus2 = await CustomerStatuses.create(mocks.mockCustomerStatus("Documentação em análise", 2, "DOC_ANALISIS"))
+      customer2 = await Customer.create(mocks.mockCustomer(user.id, customerStatus2.id))
     }catch(err){
       console.log(err)
     }
@@ -79,6 +84,24 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       const { error } = missingParamError("admin")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('Should return 200 and list of customers only x-status provided', async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user.id,
+        admin: true
+      }, {
+        'x-status': ['DOC_PENDING']
+      })
+      const res = mocks.mockRes()
+      await customerController._list(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).not.toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        statusId: customerStatus2.id
+      })]))
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        statusId: customerStatus.id
+      })]))
     })
 
   })
