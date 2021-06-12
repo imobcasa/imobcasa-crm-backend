@@ -1,6 +1,6 @@
 const { CustomerController } = require('../../controllers')
 const { User, Customer, Profile, CustomerStatuses } = require('../../models')
-const missingParamError = require('../../helpers/Errors/missing-param-errors')
+const {missingParamError, invalidParamError } = require('../../helpers/Errors')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -8,7 +8,6 @@ const modelsExpected = new ModelsExpected()
 const customerController = new CustomerController
 
 const databaseSetup = require('../../database')
-const invalidParamError = require('../../helpers/Errors/invalid-param-errors')
 
 describe("CUSTOMER CONTROLLER Tests", () => {
   let user
@@ -147,10 +146,22 @@ describe("CUSTOMER CONTROLLER Tests", () => {
         await customerController._create(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toHaveBeenCalledWith(error)
-
-      })
+      })      
     }
+
+    it('1.2 - Should return 400 if invalid userId has been provided', async () => {
+      const body = mocks.mockCustomer(user.id, customerStatus.id)
+      body.userId = "INVALIDID"
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+
+      const { error } = invalidParamError('userId')
+      await customerController._create(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
 
   })
 
 })
+
