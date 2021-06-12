@@ -140,8 +140,9 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       "userId"
     ]
 
+    let fieldsOrder = 1
     for(const field of requiredFields){
-      it(`2.1 - Should return 400 if no ${field} has been provided`, async () => {
+      it(`2.1.${fieldsOrder} - Should return 400 if no ${field} has been provided`, async () => {
         const body = mocks.mockCustomer(user.id, customerStatus2.id)
         delete body[`${field}`]
         const req = mocks.mockReq(body)
@@ -151,7 +152,8 @@ describe("CUSTOMER CONTROLLER Tests", () => {
         await customerController._create(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toHaveBeenCalledWith(error)
-      })      
+      })   
+      fieldsOrder += 1   
     }
 
     it('2.2 - Should return 400 if invalid userId has been provided', async () => {
@@ -291,8 +293,9 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       "userId"
     ]
 
+    let fieldsOrder = 1
     for(const field of requiredFields){
-      it(`4.2 - Should return 400 if no ${field} has been provided`, async () => {
+      it(`4.2.${fieldsOrder} - Should return 400 if no ${field} has been provided`, async () => {
         const body = mocks.mockCustomer(user.id, customerStatus2.id)
         delete body[`${field}`]
         const req = mocks.mockReq(body, null, null, {
@@ -308,6 +311,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toHaveBeenCalledWith(error)
       })      
+      fieldsOrder += 1
     }
     it('4.3 - Should return 400 if invalid x-customer-id has been provided', async () => {      
       const body = mocks.mockCustomer(mocks.mockCustomer(user.id, customerStatus.id))
@@ -359,8 +363,32 @@ describe("CUSTOMER CONTROLLER Tests", () => {
 
       await customerController._update(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.customerModel()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        ...modelsExpected.customerModel(),
+        phone:  "11098765432" 
+      }))
     })
+
+    it('4.5 - Should return 200 if user was updated', async () => {      
+      const body = mocks.mockCustomer(user.id, customerStatus.id)
+      body.phone = "11098765434"      
+      const req = mocks.mockReq(body, null, null, {
+        reqUserId: user.id,
+        admin: true
+      }, {
+        'x-customer-id': customer.id
+      })
+
+      const res = mocks.mockRes()
+
+      await customerController._update(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        ...modelsExpected.customerModel(),
+        phone: "11098765434"
+      }))
+    })
+
 
   })  
 
