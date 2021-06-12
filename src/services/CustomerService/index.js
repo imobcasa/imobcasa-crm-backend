@@ -141,6 +141,13 @@ class CustomerService extends Service {
   async update(fields){
     this._checkRequiredFields(this._updateRequiredFields, fields)
     this._checkFieldExists(fields['x-customer-id'], 'x-customer-id')
+
+    const customer = await this._customerRepository.getOne({
+      id: fields['x-customer-id']
+    })
+
+    this._checkEntityExsits(customer, 'x-customer-id')
+
     return {}
   }
 
