@@ -33,7 +33,9 @@ class CustomerService extends Service {
     "productInterest",
     "regionInterest",
     "biddersQuatity",
-    "userId"
+    "userId",
+    "reqUserId",
+    "admin",
   ]
 
   constructor() {

@@ -99,7 +99,8 @@ class CustomerController {
       const customerService = new CustomerService()
       const data = await customerService.update({
         'x-customer-id': req.headers['x-customer-id'],
-        ...req.body
+        ...req.body,
+        ...req.locals
       })
       return res.status(200).json(data)
     }catch(err){
