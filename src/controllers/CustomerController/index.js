@@ -26,6 +26,7 @@ class CustomerController {
       .all(this.authenticationMid.checkAuthentication)
       .get(this._getOne)
       .post(this._create)
+      .put(this._update)
 
     this.routes.route(this.searchPath)
       .all(this.authenticationMid.checkAuthentication)
@@ -93,7 +94,26 @@ class CustomerController {
     }
   }
 
-  
+  async _update(req, res){
+    try{
+      const customerService = new CustomerService()
+      const data = await customerService.update({
+        'x-customer-id': req.headers['x-customer-id'],
+        ...req.body
+      })
+      return res.status(200).json(data)
+    }catch(err){
+      if(err instanceof ServiceException){
+        const {statusCode, message} = err
+        return res.status(statusCode).json(message)
+      }else {
+        console.error(err)
+        const {error} = serverError()
+        const {statusCode, body} = internalError(error)
+        return res.status(statusCode).send(body)
+      }      
+    }
+  }
 }
 
 module.exports = CustomerController

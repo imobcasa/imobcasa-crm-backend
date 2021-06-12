@@ -20,6 +20,21 @@ class CustomerService extends Service {
     "userId"
   ]
   __getOneRequiuredFields = ['x-customer-id', 'reqUserId', 'admin']
+  _updateRequiredFields = [
+    "x-customer-id",
+    "fullName",
+    "cpf",
+    "email",
+    "phone",
+    "birthDate",
+    "incomes",
+    "startDate",
+    "origin",
+    "productInterest",
+    "regionInterest",
+    "biddersQuatity",
+    "userId"
+  ]
 
   constructor() {
     super()
@@ -121,6 +136,13 @@ class CustomerService extends Service {
     return customer
   }
 
+  async update(fields){
+    this._checkRequiredFields(this._updateRequiredFields, fields)
+    this._checkFieldExists(fields['x-customer-id'], 'x-customer-id')
+    return {}
+  }
+
 }
 
 module.exports = CustomerService
+
