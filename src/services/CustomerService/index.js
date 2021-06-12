@@ -17,9 +17,9 @@ class CustomerService extends Service {
     await this._checkRequiredFields(this._listRequiredFields, fields)
     await this._checkFieldExists(fields['x-status'], 'x-status')
     
+    const customers = await this._customerRepository.list(true)
     
-
-    return []
+    return customers.filter(customer => fields['x-status'].includes(customer.status.key))
   }
 
 }

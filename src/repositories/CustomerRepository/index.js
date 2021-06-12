@@ -8,7 +8,7 @@ class CustomerRepository {
 
   async list(){
     return await Customer.findAll({
-      include: ['user']
+      include: ['user', 'status']
     })
   }
 
