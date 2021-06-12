@@ -1,6 +1,6 @@
 const { CustomerController } = require('../../controllers')
 const { User, Customer, Profile, CustomerStatuses } = require('../../models')
-const {missingParamError, invalidParamError } = require('../../helpers/Errors')
+const {missingParamError, invalidParamError, forbidenError } = require('../../helpers/Errors')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -12,6 +12,8 @@ const databaseSetup = require('../../database')
 describe("CUSTOMER CONTROLLER Tests", () => {
   let user
   let profile
+  let user2
+  let profile2
 
   let customerStatus
   let customer
@@ -22,6 +24,9 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       await databaseSetup()
       profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
       user = await User.create(mocks.mockUser("mockedUser", profile.id))
+      
+      profile2 = await Profile.create(mocks.mockProfile("Corretor", false, false))
+      user2 = await User.create(mocks.mockUser("mockedUser", profile2.id))
 
       customerStatus = await CustomerStatuses.create(mocks.mockCustomerStatus("Pendente de Documentação", 1, "DOC_PENDING"))
       customer = await Customer.create(mocks.mockCustomer(user.id, customerStatus.id))
@@ -211,7 +216,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it('3.3 - Should return 400 if invalid x-customer-id has been provided', async () => {
+    it('3.4 - Should return 400 if invalid x-customer-id has been provided', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
         admin: true
@@ -222,6 +227,20 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       await customerController._getOne(req, res)
       const { error } = invalidParamError('x-customer-id')
       expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('3.5 - Should return 401 if requserId provided is not equal of customer userId', async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user2.id,
+        admin: true
+      }, {
+        'x-customer-id': customer.id
+      })
+      const res = mocks.mockRes()
+      await customerController._getOne(req, res)
+      const { error } = forbidenError('id')
+      expect(res.status).toHaveBeenCalledWith(403)
       expect(res.json).toHaveBeenCalledWith(error)
     })
   })
