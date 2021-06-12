@@ -145,10 +145,40 @@ class CustomerService extends Service {
     const customer = await this._customerRepository.getOne({
       id: fields['x-customer-id']
     })
-
     this._checkEntityExsits(customer, 'x-customer-id')
 
-    return {}
+    this._checkUserAccessToCustomer(fields.reqUserId, customer.userId, fields.admin)
+
+
+    const { 
+      fullName,
+      cpf,
+      email,
+      phone,
+      birthDate,
+      incomes,
+      startDate,
+      origin,
+      productInterest,
+      regionInterest,
+      biddersQuatity,
+      userId
+    } = fields
+
+    return await this._customerRepository.update(customer, { 
+      fullName,
+      cpf,
+      email,
+      phone,
+      birthDate,
+      incomes,
+      startDate,
+      origin,
+      productInterest,
+      regionInterest,
+      biddersQuatity,
+      userId
+    } )
   }
 
 }
