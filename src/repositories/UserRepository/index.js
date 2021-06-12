@@ -55,7 +55,7 @@ class UserRepository {
     return result
   }
 
-  async getOne(fields, exclude = ['password']){
+  async getOne(fields, exclude = ['password'], raw = false){
     const user = await User.findOne({
       where: {
         id: fields.id
@@ -63,7 +63,8 @@ class UserRepository {
       attributes: {
         exclude
       },
-      include: ['profile']
+      include: ['profile'],
+      raw
     })
     return user
   }

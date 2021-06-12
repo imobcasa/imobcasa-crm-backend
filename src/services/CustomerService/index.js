@@ -1,5 +1,5 @@
 const Service = require('../Service')
-const { CustomerRepository, CustomerStatusesRepository } = require('../../repositories')
+const { CustomerRepository, CustomerStatusesRepository, UserRepository } = require('../../repositories')
 
 
 class CustomerService extends Service {
@@ -24,6 +24,7 @@ class CustomerService extends Service {
     super()
     this._customerRepository = new CustomerRepository()
     this._customerStatusesRepository = new CustomerStatusesRepository()
+    this._userRepository = new UserRepository()
   }
 
 
@@ -55,6 +56,12 @@ class CustomerService extends Service {
 
   async create(fields){
     this._checkRequiredFields(this._createRequiredFields, fields)
+    
+    const user = await this._userRepository.getOne({
+      id: fields.userId
+    }, ['password'], true)
+
+    this._checkEntityExsits(user, 'userId')
 
     return {}
   }
