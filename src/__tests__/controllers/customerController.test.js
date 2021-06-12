@@ -173,7 +173,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
   })
 
   describe("3 - GET ONE Tests", () => {
-    it('Should return 400 if no id has been provided', async () => {
+    it('3.1 - Should return 400 if no x-customer-id has been provided', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
         admin: true
@@ -181,6 +181,19 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       const res = mocks.mockRes()
       await customerController._getOne(req, res)
       const { error } = missingParamError('x-customer-id')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('3.2 - Should return 400 if no reqUserId has been provided', async () => {
+      const req = mocks.mockReq(null, null, null, {
+        admin: true
+      }, {
+        'x-customer-id': customer.id
+      })
+      const res = mocks.mockRes()
+      await customerController._getOne(req, res)
+      const { error } = missingParamError('reqUserId')
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
