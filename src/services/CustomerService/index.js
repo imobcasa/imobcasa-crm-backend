@@ -38,6 +38,12 @@ class CustomerService extends Service {
     }
   }
 
+  _checkUserAccessToCustomer(userId, customerUserId){
+    if(userId !== customerUserId){
+      this._throwForbidenError()
+    }
+  }
+
 
   async list(fields) {
     await this._checkRequiredFields(this._listRequiredFields, fields)
@@ -104,6 +110,8 @@ class CustomerService extends Service {
 
     const customer = await this._customerRepository.getOne({ id: fields['x-customer-id']})
     this._checkEntityExsits(customer, 'x-customer-id')
+
+    this._checkUserAccessToCustomer(fields.reqUserId, customer.userId)
 
     return {}
   }
