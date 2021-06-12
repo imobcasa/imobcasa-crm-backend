@@ -1,4 +1,6 @@
 'use strict';
+const { v4: uuidV4 } = require('uuid')
+
 module.exports = (sequelize, DataTypes) => {
   const Customers = sequelize.define('Customers', {
     fullName: DataTypes.STRING,
@@ -12,8 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     productInterest: DataTypes.STRING,
     regionInterest: DataTypes.STRING,
     biddersQuatity: DataTypes.NUMBER,
-    userId: DataTypes.UUID
-  }, {});
+    userId: DataTypes.UUID,
+    statusId: DataTypes.UUID
+  }, {
+    hooks: {
+      beforeCreate: (customer) => {
+        customer.id = uuidV4()
+      }
+    },
+  });
   Customers.associate = function(models) {
     // associations can be defined here
   };
