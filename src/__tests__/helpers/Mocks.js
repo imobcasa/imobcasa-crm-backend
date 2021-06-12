@@ -25,15 +25,15 @@ class Mocks {
       query: query,
       params: params,
       locals: locals,
-      headers: headers      
+      headers: headers
     }
   }
 
   mockUser(
-    username = "mockedUser", 
-    profileId = "", 
+    username = "mockedUser",
+    profileId = "",
     managerId = ""
-    ) {
+  ) {
     return {
       username,
       fullName: "ValidFullName",
@@ -46,7 +46,7 @@ class Mocks {
   }
 
   mockProfile(name = "", admin = false, teamManager = false) {
-    return { 
+    return {
       name,
       admin,
       teamManager
@@ -78,6 +78,24 @@ class Mocks {
     const jwtImplementation = new JwtImplementation()
     const user = await User.findOne({ where: { id: id } })
     return await jwtImplementation.generateRefreshToken(user.id, user.admin)
+  }
+
+
+  mockCustomer(userId = "") {
+    return {
+      fullName: "Customer Full Name",
+      cpf: "00000000000",
+      email: "customer@email.com",
+      phone: "11912341234",
+      birthDate: new Date().toDateString(),
+      incomes: 100000.15,
+      startDate: new Date(),
+      origin: "Facebook",
+      productInterest: "Tatuapé",
+      regionInterest: "Leste",
+      biddersQuatity: 1,
+      userId
+    }
   }
 
 }
