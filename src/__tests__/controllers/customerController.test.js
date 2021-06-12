@@ -1,6 +1,6 @@
 const { CustomerController } = require('../../controllers')
 const { User, Customer, Profile, CustomerStatuses } = require('../../models')
-const {missingParamError, invalidParamError, forbidenError } = require('../../helpers/Errors')
+const {missingParamError, invalidParamError, forbidenError, conflictError } = require('../../helpers/Errors')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -168,10 +168,23 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it('2.3 - Should return 200 user was created', async () => {
-      const body = mocks.mockCustomer(user.id, customerStatus.id)
+    it('2.3 - Should return 409 if phone provided is already used', async () => {
+      const body = mocks.mockCustomer(user.id, customerStatus.id)      
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
+
+      await customerController._create(req, res)
+      const { error } = conflictError("phone")
+      expect(res.status).toHaveBeenCalledWith(409)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('2.4 - Should return 200 user was created', async () => {
+      const body = mocks.mockCustomer(user.id, customerStatus.id)
+      body.phone = "1100000000"
+      const req = mocks.mockReq(body)      
+      const res = mocks.mockRes()
+      console.log(req)
       await customerController._create(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.customerModel()))
@@ -369,7 +382,24 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       }))
     })
 
-    it('4.5 - Should return 200 if user was updated', async () => {      
+    it('4.5 - Should return 409 if phone provided is already used', async () => {      
+      const body = mocks.mockCustomer(user.id, customerStatus.id)
+      const req = mocks.mockReq(body, null, null, {
+        reqUserId: user.id,
+        admin: true
+      }, {
+        'x-customer-id': customer.id
+      })
+
+      const res = mocks.mockRes()
+
+      const { error } = conflictError("phone")
+      await customerController._update(req, res)
+      expect(res.status).toHaveBeenCalledWith(409)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it('4.6 - Should return 200 if user was updated', async () => {      
       const body = mocks.mockCustomer(user.id, customerStatus.id)
       body.phone = "11098765434"      
       const req = mocks.mockReq(body, null, null, {
