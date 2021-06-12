@@ -141,7 +141,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
     ]
 
     for(const field of requiredFields){
-      it(`1.1 - Should return 400 if no ${field} has been provided`, async () => {
+      it(`2.1 - Should return 400 if no ${field} has been provided`, async () => {
         const body = mocks.mockCustomer(user.id, customerStatus2.id)
         delete body[`${field}`]
         const req = mocks.mockReq(body)
@@ -154,7 +154,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       })      
     }
 
-    it('1.2 - Should return 400 if invalid userId has been provided', async () => {
+    it('2.2 - Should return 400 if invalid userId has been provided', async () => {
       const body = mocks.mockCustomer(user.id, customerStatus.id)
       body.userId = "INVALIDID"
       const req = mocks.mockReq(body)
@@ -166,7 +166,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it('1.3 - Should return 200 user was created', async () => {
+    it('2.3 - Should return 200 user was created', async () => {
       const body = mocks.mockCustomer(user.id, customerStatus.id)
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
@@ -258,6 +258,23 @@ describe("CUSTOMER CONTROLLER Tests", () => {
     })
   })
 
+  describe("4 - UPDATE Tests", () => {
+    it('Should return 400 if no x-customer-id has been provided', async () => {      
+      const body = mocks.mockCustomer(mocks.mockCustomer(user.id, customerStatus.id))
+      body.phone = "11098765432"
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+
+      await customerController._update(req, res)
+      const { error } = missingParamError("x-customer-id")
+
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+
+    })
+  })
+
 })
+
 
 

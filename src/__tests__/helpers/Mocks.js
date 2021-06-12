@@ -81,12 +81,12 @@ class Mocks {
   }
 
 
-  mockCustomer(userId = "", statusId = "") {
+  mockCustomer(userId = "", statusId = "", phone = "11912341234") {
     return {
       fullName: "Customer Full Name",
       cpf: "00000000000",
       email: "customer@email.com",
-      phone: "11912341234",
+      phone,
       birthDate: new Date(),
       incomes: 100000.15,
       startDate: new Date(),
