@@ -35,6 +35,29 @@ class ModelsExpected {
     }
   }
 
+  
+  customerModel() {
+    return {
+      id: expect.any(String),
+      fullName: expect.any(String),
+      cpf: expect.any(String),
+      email: expect.any(String),
+      phone: expect.any(String),
+      birthDate: expect.any(Date),
+      incomes: expect.any(Number),
+      startDate: expect.any(Date),
+      origin: expect.any(String),
+      productInterest: expect.any(String),
+      regionInterest: expect.any(String),
+      biddersQuatity: expect.any(Number),
+      userId: expect.any(String),
+      statusId: expect.any(String),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
+    }
+  }
+
+
 }
 
 

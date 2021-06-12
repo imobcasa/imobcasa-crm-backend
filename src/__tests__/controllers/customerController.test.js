@@ -161,6 +161,15 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
+    it('1.3 - Should return 200 user was created', async () => {
+      const body = mocks.mockCustomer(user.id, customerStatus.id)
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      await customerController._create(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.customerModel()))
+    })
+
   })
 
 })

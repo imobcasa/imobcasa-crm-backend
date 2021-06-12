@@ -87,7 +87,7 @@ class Mocks {
       cpf: "00000000000",
       email: "customer@email.com",
       phone: "11912341234",
-      birthDate: new Date().toDateString(),
+      birthDate: new Date(),
       incomes: 100000.15,
       startDate: new Date(),
       origin: "Facebook",
