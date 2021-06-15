@@ -24,6 +24,18 @@ class AuthorizationMiddleware {
       }
     }
   }
+
+  async checkTeamManagerPrivileges(req, res ,next){
+
+  }
+
+  async checkDocumentistPrivileges(req, res, next){
+
+  }
+
+  async checkFinancialPrivileges(req, res, next){
+    
+  }
 }
 
 module.exports = AuthorizationMiddleware

@@ -9,8 +9,7 @@ class SalesRepository {
     return await Sales.findOne({
       where: {
         customerId: customerId
-      },
-      include: ["customer"]
+      }
     })
   }
   

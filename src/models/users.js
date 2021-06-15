@@ -20,8 +20,9 @@ module.exports = (sequelize, DataTypes) => {
         const salt = bcrypt.genSaltSync()
         user.password = bcrypt.hashSync(user.password, salt)
         user.id = uuidV4()
-      }
-    },
+      },           
+    },    
+    
   });
   user.prototype.validPassword = async function (password) {
     return await bcrypt.compareSync(password, this.password)
@@ -38,5 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     
 
   };
+
+  
   return user;
 };

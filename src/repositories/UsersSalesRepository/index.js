@@ -6,11 +6,11 @@ const { UsersSales } = require('../../models')
 class UsersSalesRepository {
  
   async getUsersSalesBySaleId({ saleId }){
-    return await UsersSales.findOne({
+    return await UsersSales.findAll({
       where: {
         saleId: saleId
       },
-      include: ["sale", "user"]
+      include: ["user"]
     })
   }
   
