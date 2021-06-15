@@ -64,7 +64,7 @@ class ModelsExpected {
       projectName: expect.any(String),
       unityName: expect.any(String),
       tower: expect.any(String),
-      value: expect.any(String),
+      value: expect.any(Number),
       observations: expect.any(String),
       users: expect.arrayContaining([expect.objectContaining({
         id: expect.any(String),

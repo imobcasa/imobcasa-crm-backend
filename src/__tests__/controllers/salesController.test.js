@@ -156,12 +156,71 @@ describe("SALES Controller Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+
+    it("2.3.1 - Should return 400 if invalid usersIds has been provided", async () => {
+      const body = mocks.mockSale(customer.id)
+      body.usersIds = ["Invalid", user2.id]
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError("usersIds")
+      await salesController.createSale(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it("2.3.2 - Should return 400 if invalid usersIds has been provided", async () => {
+      const body = mocks.mockSale(customer.id)
+      body.usersIds = [user.id, "INVALID USER ID"]
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError("usersIds")
+      await salesController.createSale(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    it("2.4 - Should return 200 if sale was created", async () => {
+      const body = mocks.mockSale(customer.id)
+      body.usersIds = [user.id, user2.id]
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      await salesController.createSale(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      const saleModelExpected = modelsExpected.saleModel()
+      delete saleModelExpected.users
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({...saleModelExpected}))
+    })
   })
 
 
-  // describe("PUT tests", () => {
+  describe("3 - PUT tests", () => {
+    const requiredFields = [
+      "customerId",
+      "projectName",
+      "unityName",
+      "tower",
+      "value",
+      "observations",
+      "usersIds"
+    ]
+    let testPos = 1
+    for (const field of requiredFields) {
+      it(`3.1.${testPos} Should return 400 if no ${field} has been provided`, async () => {
+        const body = mocks.mockSale(customer.id)
+        body.usersIds = [user.id, user2.id]
 
-  // })
+
+        delete body[`${field}`]
+        const req = mocks.mockReq(body)
+        const res = mocks.mockRes()
+
+        const { error } = missingParamError(field)
+        await salesController.updateSale(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+      testPos += 1
+    }
+  })
 
   // describe("DELETE tests", () => {
 
