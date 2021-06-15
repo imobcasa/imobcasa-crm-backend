@@ -1,4 +1,4 @@
-const { User } = require('../../models')
+const { Users } = require('../../models')
 const JwtImplementation = require('../../implementations/jwt')
 
 
@@ -70,13 +70,13 @@ class Mocks {
 
   async mockJwtToken(id) {
     const jwtImplementation = new JwtImplementation()
-    const user = await User.findOne({ where: { id: id }, include: ['profile'] })
+    const user = await Users.findOne({ where: { id: id }, include: ['profile'] })
     return await jwtImplementation.generateAccessToken(user.id, user.profile.admin)
   }
 
   async mockRefreshToken(id) {
     const jwtImplementation = new JwtImplementation()
-    const user = await User.findOne({ where: { id: id } })
+    const user = await Users.findOne({ where: { id: id } })
     return await jwtImplementation.generateRefreshToken(user.id, user.admin)
   }
 

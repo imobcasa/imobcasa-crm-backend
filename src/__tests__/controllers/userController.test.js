@@ -2,7 +2,7 @@ const { UserController } = require('../../controllers')
 const userController = new UserController()
 const databaseSetup = require('../../database')
 const { missingParamError, invalidParamError } = require('../../helpers/Errors')
-const { User, Profile } = require('../../models')
+const { Users, Profiles } = require('../../models')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -26,12 +26,12 @@ describe('USER CONTROLLER: tests', () => {
 
   beforeAll(async () => {
     try {
-      profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
-      user = await User.create(mocks.mockUser("administrador", profile.id), { raw: true })
+      profile = await Profiles.create(mocks.mockProfile("Administrador", true, false))
+      user = await Users.create(mocks.mockUser("administrador", profile.id), { raw: true })
       token = await mocks.mockJwtToken(user.id)
 
-      profile2 = await Profile.create(mocks.mockProfile("Corretor", true, false))
-      user2 = await User.create(mocks.mockUser("user2", profile2.id))
+      profile2 = await Profiles.create(mocks.mockProfile("Corretor", true, false))
+      user2 = await Users.create(mocks.mockUser("user2", profile2.id))
     } catch (err) {
       console.log(err)
     }
@@ -39,8 +39,8 @@ describe('USER CONTROLLER: tests', () => {
 
   afterAll(async () => {
     try {
-      await User.destroy({ where: {} })
-      await Profile.destroy({ where: {} })
+      await Users.destroy({ where: {} })
+      await Profiles.destroy({ where: {} })
     } catch (err) {
       console.log(err)
     }

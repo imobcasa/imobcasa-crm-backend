@@ -1,7 +1,7 @@
 const {LoginController} = require('../../controllers')
 const loginController = new LoginController()
 const { invalidParamError, missingParamError } = require('../../helpers/Errors')
-const {User, Profile} = require('../../models')
+const {Users, Profiles} = require('../../models')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -14,8 +14,8 @@ describe('AUTH CONTROLLER: tests', () => {
   beforeAll(async () => {
     try{
       await databaseSetup()
-      profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
-      user = await User.create(mocks.mockUser("mockedUser", profile.id))
+      profile = await Profiles.create(mocks.mockProfile("Administrador", true, false))
+      user = await Users.create(mocks.mockUser("mockedUser", profile.id))
     }catch(err){
       console.log(err)
     }
@@ -23,8 +23,8 @@ describe('AUTH CONTROLLER: tests', () => {
   
   afterAll(async () => {
     try{
-      await User.destroy({where: {}})
-      await Profile.destroy({where: {}})
+      await Users.destroy({where: {}})
+      await Profiles.destroy({where: {}})
     }catch(err){
       console.log(err.toString())
     }

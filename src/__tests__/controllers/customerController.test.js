@@ -1,5 +1,5 @@
 const { CustomerController } = require('../../controllers')
-const { User, Customer, Profile, CustomerStatuses } = require('../../models')
+const { Users, Customers, Profiles, CustomerStatuses } = require('../../models')
 const {missingParamError, invalidParamError, forbidenError, conflictError } = require('../../helpers/Errors')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
@@ -22,17 +22,17 @@ describe("CUSTOMER CONTROLLER Tests", () => {
   beforeAll(async () => {
     try{
       await databaseSetup()
-      profile = await Profile.create(mocks.mockProfile("Administrador", true, false))
-      user = await User.create(mocks.mockUser("mockedUser", profile.id))
+      profile = await Profiles.create(mocks.mockProfile("Administrador", true, false))
+      user = await Users.create(mocks.mockUser("mockedUser", profile.id))
       
-      profile2 = await Profile.create(mocks.mockProfile("Corretor", false, false))
-      user2 = await User.create(mocks.mockUser("mockedUser", profile2.id))
+      profile2 = await Profiles.create(mocks.mockProfile("Corretor", false, false))
+      user2 = await Users.create(mocks.mockUser("mockedUser", profile2.id))
 
       customerStatus = await CustomerStatuses.create(mocks.mockCustomerStatus("Pendente de Documentação", 1, "DOC_PENDING"))
-      customer = await Customer.create(mocks.mockCustomer(user.id, customerStatus.id))
+      customer = await Customers.create(mocks.mockCustomer(user.id, customerStatus.id))
 
       customerStatus2 = await CustomerStatuses.create(mocks.mockCustomerStatus("Documentação em análise", 2, "DOC_ANALISIS"))
-      customer2 = await Customer.create(mocks.mockCustomer(user.id, customerStatus2.id))
+      customer2 = await Customers.create(mocks.mockCustomer(user.id, customerStatus2.id))
     }catch(err){
       console.log(err)
     }
@@ -40,10 +40,10 @@ describe("CUSTOMER CONTROLLER Tests", () => {
   
   afterAll(async () => {
     try{
-      await Customer.destroy({ where: {} })
+      await Customers.destroy({ where: {} })
       await CustomerStatuses.destroy({ where: {} })
-      await User.destroy({where: {}})
-      await Profile.destroy({where: {}})
+      await Users.destroy({where: {}})
+      await Profiles.destroy({where: {}})
     }catch(err){
       console.log(err.toString())
     }

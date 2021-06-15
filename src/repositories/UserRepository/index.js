@@ -1,12 +1,12 @@
 const { Op } = require('sequelize')
-const { User } = require('../../models')
+const { Users } = require('../../models')
 
 
 
 class UserRepository {
 
   async create(fields){
-    const user = await User.create(fields, {
+    const user = await Users.create(fields, {
       attributes: {
         exclude: ['password']
       }
@@ -16,7 +16,7 @@ class UserRepository {
   }
   
   async list(){
-    return await User.findAll({
+    return await Users.findAll({
       attributes: {
         exclude: ['password']
       },
@@ -25,7 +25,7 @@ class UserRepository {
   }
 
   async findAll(){
-    const users = await User.findAll({
+    const users = await Users.findAll({
       attributes: {
         exclude: ['password']
       }
@@ -46,7 +46,7 @@ class UserRepository {
   }
 
   async delete(fields){
-    const result = await User.destroy({
+    const result = await Users.destroy({
       where:
       {
         id:fields.id
@@ -56,7 +56,7 @@ class UserRepository {
   }
 
   async getOne(fields, exclude = ['password'], raw = false){
-    const user = await User.findOne({
+    const user = await Users.findOne({
       where: {
         id: fields.id
       },

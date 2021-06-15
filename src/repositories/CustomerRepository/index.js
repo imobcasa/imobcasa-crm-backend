@@ -1,4 +1,4 @@
-const { Customer } = require('../../models')
+const { Customers } = require('../../models')
 
 
 
@@ -7,7 +7,7 @@ const { Customer } = require('../../models')
 class CustomerRepository {
 
   async list(raw = false){
-    return await Customer.findAll({
+    return await Customers.findAll({
       include: ['user', 'status'],
       raw
     })
@@ -28,7 +28,7 @@ class CustomerRepository {
     userId,   
     statusId
   }){
-    return await Customer.create({
+    return await Customers.create({
       fullName,
       cpf,
       email,
@@ -49,7 +49,7 @@ class CustomerRepository {
   }
 
   async getOne(fields, raw = false){
-    return await Customer.findOne({
+    return await Customers.findOne({
       where: {
         id: fields.id
       },
@@ -76,7 +76,7 @@ class CustomerRepository {
   }
 
   async getByPhone(phone, raw){
-    return await Customer.findOne({
+    return await Customers.findOne({
       where: {
         phone
       },

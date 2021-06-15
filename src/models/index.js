@@ -11,33 +11,62 @@ const sequelize = new Sequelize(
 const db = {
     Sequelize: Sequelize,
     sequelize,
-    User: sequelize.import("./users"),
-    Profile: sequelize.import("./profiles"),
-    Customer: sequelize.import("./customers"),
-    CustomerStatuses: sequelize.import("./customerstatus")
+    Users: sequelize.import("./users"),
+    Profiles: sequelize.import("./profiles"),
+    Customers: sequelize.import("./customers"),
+    CustomerStatuses: sequelize.import("./customerstatus"),
+    Sales: sequelize.import("./sales"),
+    UsersSales: sequelize.import("./userssales")
 }
 
-db.User.belongsTo(db.Profile, {
+db.Users.belongsTo(db.Profiles, {
     foreignKey: 'profileId',
     targetKey: 'id',
     as: 'profile'
 })
 
-db.Customer.belongsTo(db.User, {
+db.Users.hasMany(db.Customers, {
+    onDelete: 'SET NULL'
+})
+
+db.Customers.belongsTo(db.Users, {
     foreignKey: 'userId',
     targetKey: 'id',
     as: 'user'
 })
 
-db.Customer.belongsTo(db.CustomerStatuses, {
+db.Customers.belongsTo(db.CustomerStatuses, {
     foreignKey: 'statusId',
     targetKey: 'id',
     as: 'status'
 })
 
-db.User.hasMany(db.Customer, {
+db.Customers.hasOne(db.Sales, {
     onDelete: 'CASCADE'
 })
+
+db.Sales.belongsTo(db.Customers, {
+    foreignKey: 'customerId',
+    targetKey: 'id',
+    as: 'customer'
+})
+
+db.Sales.hasMany(db.UsersSales, {
+    onDelete: 'CASCADE'
+})
+
+db.UsersSales.belongsTo(db.Users, {
+    foreignKey: 'userId',
+    targetKey: "id",
+    as: 'user'
+})
+
+db.UsersSales.belongsTo(db.Sales, {
+    foreignKey: 'saleId',
+    targetKey: "id",
+    as: 'sale'
+})
+
 
 Object.keys(db).forEach(model => {
     if ("associate" in db[model]) {

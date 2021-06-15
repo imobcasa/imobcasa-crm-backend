@@ -1,5 +1,5 @@
 const Service = require('../Service')
-const {User} = require('../../models')
+const {Users} = require('../../models')
 const {UserRepository} = require ('../../repositories')
 const jwt = require('jsonwebtoken')
 const JwtImplementation = require('../../implementations/jwt')
@@ -31,7 +31,7 @@ class LoginService extends Service {
 
   async authenticate(fields) {
     await this._checkRequiredFields(this._authenticateRequiredFields, fields)
-    const user = await User.findOne({
+    const user = await Users.findOne({
       where: {
         username: fields.username
       },

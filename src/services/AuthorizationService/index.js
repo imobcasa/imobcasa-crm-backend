@@ -1,5 +1,5 @@
 const Service = require('../Service')
-const {User} = require('../../models/')
+const {Users} = require('../../models/')
 const jwt = require('jsonwebtoken')
 
 class AuthorizationService extends Service {
@@ -8,7 +8,7 @@ class AuthorizationService extends Service {
 
 
   async _checkUserAdminPrivileges(id){
-    const user = await User.findOne({ where: { id: id }, include: ['profile'] })
+    const user = await Users.findOne({ where: { id: id }, include: ['profile'] })
     if (!user.profile.admin) {
       this._throwForbidenError("authorization")      
     }
