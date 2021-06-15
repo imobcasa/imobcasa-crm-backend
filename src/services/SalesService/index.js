@@ -20,7 +20,8 @@ class UserService extends Service {
     "tower",
     "value",
     "observations",
-    "usersIds"
+    "usersIds",
+    "id"
    ]
 
   constructor(){

@@ -200,14 +200,15 @@ describe("SALES Controller Tests", () => {
       "tower",
       "value",
       "observations",
-      "usersIds"
+      "usersIds",
+      "id"
     ]
     let testPos = 1
     for (const field of requiredFields) {
       it(`3.1.${testPos} Should return 400 if no ${field} has been provided`, async () => {
         const body = mocks.mockSale(customer.id)
         body.usersIds = [user.id, user2.id]
-
+        body.id = sale.id
 
         delete body[`${field}`]
         const req = mocks.mockReq(body)
@@ -224,6 +225,7 @@ describe("SALES Controller Tests", () => {
     it("3.2 - Should return 400 if invalid customerId has been provided", async () => {
       const body = mocks.mockSale("INVALID CUSTOMER ID")
       body.usersIds = [user.id, user2.id]
+      body.id = sale.id
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
       const { error } = invalidParamError("customerId")
@@ -235,6 +237,7 @@ describe("SALES Controller Tests", () => {
     it("2.3.1 - Should return 400 if invalid usersIds has been provided", async () => {
       const body = mocks.mockSale(customer.id)
       body.usersIds = ["Invalid", user2.id]
+      body.id = sale.id
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
       const { error } = invalidParamError("usersIds")
@@ -246,6 +249,7 @@ describe("SALES Controller Tests", () => {
     it("2.3.2 - Should return 400 if invalid usersIds has been provided", async () => {
       const body = mocks.mockSale(customer.id)
       body.usersIds = [user.id, "INVALID USER ID"]
+      body.id = sale.id
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
       const { error } = invalidParamError("usersIds")
@@ -253,6 +257,7 @@ describe("SALES Controller Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+
 
     
   })
