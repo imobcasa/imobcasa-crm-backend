@@ -118,9 +118,33 @@ describe("SALES Controller Tests", () => {
   })
 
 
-  // describe("POST tests", () => {
-    
-  // })
+  describe("2 - POST tests", () => {
+    const requiredFields = [ 
+      "customerId",
+      "projectName",
+      "unityName",
+      "tower",
+      "value",
+      "observations",
+      "usersIds"
+     ]
+     let testPos = 1
+     for(const field of requiredFields){
+       it(`2.1.${testPos} Should return 400 if no ${field} has been provided`, async () => {
+        const body = mocks.mockSale(customer.id)
+
+        delete body[`${field}`]
+        const req = mocks.mockReq(body)
+         const res = mocks.mockRes()
+
+         const { error } = missingParamError(field)
+         await salesController.createSale(req, res)
+         expect(res.status).toHaveBeenCalledWith(400)
+         expect(res.json).toHaveBeenCalledWith(error)
+       })
+       testPos += 1
+     }
+  })
 
 
   // describe("PUT tests", () => {
