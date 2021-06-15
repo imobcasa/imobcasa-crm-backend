@@ -18,14 +18,22 @@ class UsersSalesRepository {
   async create({
     userId,
     saleId,
-    raw
   }){
     return await UsersSales.create({
       userId,
       saleId
     }, {
-      raw
+      include: ['user'],
     })
+  }
+
+  async update(
+    userSale,
+    userId
+  ) {
+    userSale.userId = userId
+    await userSale.save()
+    return userSale
   }
   
   

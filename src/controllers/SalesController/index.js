@@ -23,6 +23,7 @@ class SalesController {
       .all(this.authenticationMid.checkAuthentication)
       .get(this.getSale)
       .post(this.createSale)
+      .put(this.updateSale)
 
   }
 
@@ -64,6 +65,25 @@ class SalesController {
       }
     }
   }
+
+  async updateSale(req, res){
+    try {
+      const salesService = new SalesService()
+      const data = await salesService.update(req.body)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
 
   
 }

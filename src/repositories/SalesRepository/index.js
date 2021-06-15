@@ -9,7 +9,7 @@ class SalesRepository {
     return await Sales.findOne({
       where: {
         customerId: customerId
-      }
+      },
     })
   }
   
@@ -20,8 +20,7 @@ class SalesRepository {
     unityName,
     tower,
     value,
-    observations,
-    raw
+    observations
   }){
     return await Sales.create({
       customerId,
@@ -30,9 +29,26 @@ class SalesRepository {
       tower,
       value,
       observations
-    }, {
-      raw
     })
+  }
+
+  async update(sale, {
+    customerId,
+    projectName,
+    unityName,
+    tower,
+    value,
+    observations
+  }) {
+    sale.customerId =  customerId
+    sale.projectName =  projectName
+    sale.unityName =  unityName
+    sale.tower =  tower
+    sale.value =  value
+    sale.observations =  observations
+
+    await sale.save()
+    return sale
   }
   
 }
