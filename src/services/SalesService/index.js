@@ -111,6 +111,22 @@ class UserService extends Service {
 
   async update(fields){
     this._checkRequiredFields(this._updateRequiredFields, fields)
+    
+    const {
+      customerId,
+      projectName,
+      unityName,
+      tower,
+      value,
+      observations,
+      usersIds
+    } = fields
+
+    const customer = await this._customersRespository.getOne({
+      id: customerId
+    })
+    this._checkEntityExsits(customer, "customerId")
+
     return {}
   }
 
