@@ -127,6 +127,13 @@ class UserService extends Service {
     })
     this._checkEntityExsits(customer, "customerId")
 
+    for(const userId of usersIds){
+      const user = await this._usersRepository.getOne({
+        id: userId
+      })
+      this._checkEntityExsits(user, "usersIds")
+    }
+
     return {}
   }
 
