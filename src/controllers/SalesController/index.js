@@ -22,6 +22,7 @@ class SalesController {
     this.routes.route(this.basePath)
       .all(this.authenticationMid.checkAuthentication)
       .get(this.getSale)
+      .post(this.createSale)
 
   }
 
@@ -45,6 +46,26 @@ class SalesController {
       }
     }
   }
+
+  async createSale(req, res){
+    try {
+      const salesService = new SalesService()
+      const data = await salesService.create(req.body)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  
 }
 
 module.exports = SalesController

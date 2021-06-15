@@ -3,6 +3,15 @@ const { SalesRepository, UsersSalesRepository } = require('../../repositories')
 
 class UserService extends Service {
   _getOneRequiredFields = ["x-customer-id", "reqUserId", "admin"]
+  _createRequiredFields = [ 
+    "customerId",
+    "projectName",
+    "unityName",
+    "tower",
+    "value",
+    "observations",
+    "usersIds"
+   ]
 
   constructor(){
     super()
@@ -34,6 +43,12 @@ class UserService extends Service {
     return sale
   }
 
+
+  async create(fields){
+    this._checkRequiredFields(this._createRequiredFields, fields)
+
+    return {}
+  }
   
 
 }

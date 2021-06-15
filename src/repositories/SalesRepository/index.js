@@ -13,6 +13,27 @@ class SalesRepository {
     })
   }
   
+
+  async create({
+    customerId,
+    projectName,
+    unityName,
+    tower,
+    value,
+    observations,
+    raw
+  }){
+    return await Sales.create({
+      customerId,
+      projectName,
+      unityName,
+      tower,
+      value,
+      observations
+    }, {
+      raw
+    })
+  }
   
 }
 

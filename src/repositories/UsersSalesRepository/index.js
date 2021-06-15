@@ -10,7 +10,21 @@ class UsersSalesRepository {
       where: {
         saleId: saleId
       },
-      include: ["user"]
+      include: ["user"],
+      
+    })
+  }
+
+  async create({
+    userId,
+    saleId,
+    raw
+  }){
+    return await UsersSales.create({
+      userId,
+      saleId
+    }, {
+      raw
     })
   }
   
