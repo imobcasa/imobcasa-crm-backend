@@ -107,7 +107,7 @@ class Mocks {
     }
   }
 
-  mockSale(customerId){
+  mockSale(customerId = ""){
     return {
       customerId,
       projectName: "ProjectMock",

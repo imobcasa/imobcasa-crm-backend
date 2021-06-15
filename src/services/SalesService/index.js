@@ -4,6 +4,7 @@ const { SearchSource } = require('@jest/core')
 
 class UserService extends Service {
   _getOneRequiredFields = ["x-customer-id", "reqUserId", "admin"]
+  _deleteRequiredFields = ["x-sale-id"]
   _createRequiredFields = [ 
     "customerId",
     "projectName",
@@ -14,7 +15,6 @@ class UserService extends Service {
     "usersIds"
    ]
    _updateRequiredFields = [ 
-    "customerId",
     "projectName",
     "unityName",
     "tower",
@@ -96,6 +96,11 @@ class UserService extends Service {
       this._checkEntityExsits(user, "usersIds")
     }
 
+
+    
+
+
+
     const sale = await this._salesRepository.create({
       customerId,
       projectName,
@@ -105,6 +110,14 @@ class UserService extends Service {
       observations
     })
 
+    let usersSales = []
+    for(const userId of usersIds){
+      const userSale = await this._usersSalesRepository.create({
+        userId,
+        saleId: sale.id
+      })
+      usersSales.push(userSale)
+    }
 
     return sale
   }
@@ -114,7 +127,7 @@ class UserService extends Service {
     this._checkRequiredFields(this._updateRequiredFields, fields)
     
     const {
-      customerId,
+      id,
       projectName,
       unityName,
       tower,
@@ -123,10 +136,11 @@ class UserService extends Service {
       usersIds
     } = fields
 
-    const customer = await this._customersRespository.getOne({
-      id: customerId
-    })
-    this._checkEntityExsits(customer, "customerId")
+    
+    this._checkEntityExsits(
+      await this._salesRepository.getOne({id}), 
+      "id"
+    )
 
     for(const userId of usersIds){
       const user = await this._usersRepository.getOne({
@@ -135,7 +149,43 @@ class UserService extends Service {
       this._checkEntityExsits(user, "usersIds")
     }
 
-    return {}
+    
+    for(const userId of usersIds){
+      const userSaleToUpdate = await this._usersSalesRepository.getUserSaleBySaleAndUserId({
+        saleId: id,
+        userId
+      })
+      await this._usersSalesRepository.update({
+        id: userSaleToUpdate.id,
+        userId
+      })
+    }
+    
+
+    return await this._salesRepository.update({
+      id,
+      projectName,
+      unityName,
+      tower,
+      value,
+      observations
+    })
+  }
+
+  async delete(fields){
+    this._checkRequiredFields(this._deleteRequiredFields, fields)
+
+    this._checkEntityExsits(
+      await this._salesRepository.getOne({ id: fields['x-sale-id'] }),
+      'x-sale-id'
+    )
+
+    await this._usersSalesRepository.delete({
+      id: fields['x-sale-id']
+    })
+    
+
+    return await this._salesRepository.delete({ id: fields['x-sale-id']})
   }
 
 }

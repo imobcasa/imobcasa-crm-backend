@@ -28,14 +28,36 @@ class UsersSalesRepository {
   }
 
   async update(
-    userSale,
+    id,
     userId
   ) {
-    userSale.userId = userId
-    await userSale.save()
-    return userSale
+    return await UsersSales.update({
+      userId
+    }, {
+      where: {
+        id: id
+      }
+    })
   }
   
+  async getUserSaleBySaleAndUserId({ saleId, userId }){
+    return await UsersSales.findOne({
+      where: {
+        saleId: saleId,
+        userId: userId
+      },
+    })
+  }
+
+  async delete({
+    id
+  }){
+    return await UsersSales.destroy({
+      where: {
+        saleId: id
+      }
+    })
+  }
   
 }
 

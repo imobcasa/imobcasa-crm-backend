@@ -5,6 +5,14 @@ const { Sales } = require('../../models')
 
 class SalesRepository {
  
+  async getOne({ id }){
+    return await Sales.findOne({
+      where: {
+        id
+      },
+    })
+  }
+
   async getSaleByCustomerId({ customerId }){
     return await Sales.findOne({
       where: {
@@ -32,24 +40,37 @@ class SalesRepository {
     })
   }
 
-  async update(sale, {
-    customerId,
+  async update({
+    id,
     projectName,
     unityName,
     tower,
     value,
     observations
   }) {
-    sale.customerId =  customerId
-    sale.projectName =  projectName
-    sale.unityName =  unityName
-    sale.tower =  tower
-    sale.value =  value
-    sale.observations =  observations
-
-    await sale.save()
-    return sale
+    return Sales.update({
+      projectName,
+      unityName,
+      tower,
+      value,
+      observations
+    }, {
+      where: {
+        id: id
+      }
+    })
   }
+
+  async delete({
+    id
+  }){
+    return await Sales.destroy({
+      where: {
+        id
+      }
+    })
+  }
+  
   
 }
 

@@ -24,6 +24,7 @@ class SalesController {
       .get(this.getSale)
       .post(this.createSale)
       .put(this.updateSale)
+      .delete(this.deleteSale)
 
   }
 
@@ -70,6 +71,24 @@ class SalesController {
     try {
       const salesService = new SalesService()
       const data = await salesService.update(req.body)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async deleteSale(req, res){
+    try {
+      const salesService = new SalesService()
+      const data = await salesService.delete(req.headers)
       return res.status(200).json(data)
     } catch (err) {
       if (err instanceof ServiceException) {
