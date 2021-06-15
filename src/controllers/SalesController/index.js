@@ -28,7 +28,10 @@ class SalesController {
   async getSale(req, res) {
     try {
       const salesService = new SalesService()
-      const data = salesService.getSale()
+      const data = await salesService.getSale({
+        ...req.headers,
+        ...req.locals
+      })
       return res.status(200).json(data)
     } catch (err) {
       if (err instanceof ServiceException) {

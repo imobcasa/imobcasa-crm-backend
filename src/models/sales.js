@@ -1,13 +1,13 @@
 'use strict';
+
+const { v4: uuidV4 } = require('uuid')
 module.exports = (sequelize, DataTypes) => {
   const Sales = sequelize.define('Sales', {
     customerId: DataTypes.UUID,
-    userId: DataTypes.UUID,
     projectName: DataTypes.STRING,
     unityName: DataTypes.STRING,
     tower: DataTypes.STRING,
-    value: DataTypes.STRING,
-    managerId: DataTypes.STRING,
+    value: DataTypes.NUMBER,
     observations: DataTypes.STRING
   }, {
     hooks: {
