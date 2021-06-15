@@ -1,5 +1,5 @@
 const { SalesController } = require('../../controllers')
-const {missingParamError, invalidParamError, forbidenError, conflictError } = require('../../helpers/Errors')
+const { missingParamError, invalidParamError, forbidenError, conflictError } = require('../../helpers/Errors')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -32,7 +32,7 @@ describe("SALES Controller Tests", () => {
     customer = await setupTests.generateCustomer(user.id, customerStatus.id)
 
     const { sale: saleGenerated, usersSales } = await setupTests.generateSale(customer.id, [user.id, user2.id])
-    
+
     sale = saleGenerated
 
 
@@ -53,7 +53,7 @@ describe("SALES Controller Tests", () => {
       const req = mocks.mockReq()
       const res = mocks.mockRes()
 
-      const { error }  = missingParamError("x-customer-id")
+      const { error } = missingParamError("x-customer-id")
       await salesController.getSale(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
@@ -67,7 +67,7 @@ describe("SALES Controller Tests", () => {
       })
       const res = mocks.mockRes()
 
-      const { error }  = missingParamError("reqUserId")
+      const { error } = missingParamError("reqUserId")
       await salesController.getSale(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
@@ -81,7 +81,7 @@ describe("SALES Controller Tests", () => {
       })
       const res = mocks.mockRes()
 
-      const { error }  = missingParamError("admin")
+      const { error } = missingParamError("admin")
       await salesController.getSale(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
@@ -95,7 +95,7 @@ describe("SALES Controller Tests", () => {
       })
       const res = mocks.mockRes()
 
-      const { error }  = invalidParamError("x-customer-id")
+      const { error } = invalidParamError("x-customer-id")
       await salesController.getSale(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
@@ -119,7 +119,7 @@ describe("SALES Controller Tests", () => {
 
 
   describe("2 - POST tests", () => {
-    const requiredFields = [ 
+    const requiredFields = [
       "customerId",
       "projectName",
       "unityName",
@@ -127,32 +127,44 @@ describe("SALES Controller Tests", () => {
       "value",
       "observations",
       "usersIds"
-     ]
-     let testPos = 1
-     for(const field of requiredFields){
-       it(`2.1.${testPos} Should return 400 if no ${field} has been provided`, async () => {
+    ]
+    let testPos = 1
+    for (const field of requiredFields) {
+      it(`2.1.${testPos} Should return 400 if no ${field} has been provided`, async () => {
         const body = mocks.mockSale(customer.id)
+        body.usersIds = [user.id, user2.id]
+
 
         delete body[`${field}`]
         const req = mocks.mockReq(body)
-         const res = mocks.mockRes()
+        const res = mocks.mockRes()
 
-         const { error } = missingParamError(field)
-         await salesController.createSale(req, res)
-         expect(res.status).toHaveBeenCalledWith(400)
-         expect(res.json).toHaveBeenCalledWith(error)
-       })
-       testPos += 1
-     }
+        const { error } = missingParamError(field)
+        await salesController.createSale(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+      testPos += 1
+    }
+    it("2.2 - Should return 400 if invalid customerId has been provided", async () => {
+      const body = mocks.mockSale("INVALID CUSTOMER ID")
+      body.usersIds = [user.id, user2.id]
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError("customerId")
+      await salesController.createSale(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
   })
 
 
   // describe("PUT tests", () => {
-    
+
   // })
 
   // describe("DELETE tests", () => {
-    
+
   // })
 
 
