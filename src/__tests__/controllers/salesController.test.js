@@ -47,23 +47,23 @@ describe("SALES Controller Tests", () => {
   })
 
 
-  describe("GET ONE tests", () => {
+  describe("1 - GET ONE tests", () => {
 
-    it("Should return 400 if no x-sale-id has not been provided", async () => {
+    it("1.1 - Should return 400 if no x-customer-id has not been provided", async () => {
       const req = mocks.mockReq()
       const res = mocks.mockRes()
 
-      const { error }  = missingParamError("x-sale-id")
+      const { error }  = missingParamError("x-customer-id")
       await salesController.getSale(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it("Should return 400 if no reqUserId has not been provided", async () => {
+    it("1.2 - Should return 400 if no reqUserId has not been provided", async () => {
       const req = mocks.mockReq(null, null, null, {
         "admin": true
       }, {
-        'x-sale-id': sale.id
+        'x-customer-id': customer.id
       })
       const res = mocks.mockRes()
 
@@ -73,11 +73,11 @@ describe("SALES Controller Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it("Should return 400 if no admin has not been provided", async () => {
+    it("1.3 - Should return 400 if no admin has not been provided", async () => {
       const req = mocks.mockReq(null, null, null, {
         "reqUserId": user.id
       }, {
-        'x-sale-id': sale.id
+        'x-customer-id': customer.id
       })
       const res = mocks.mockRes()
 
@@ -85,6 +85,35 @@ describe("SALES Controller Tests", () => {
       await salesController.getSale(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+    it("1.4 - Should return 400 if invalid id has been provided", async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user.id,
+        admin: true
+      }, {
+        'x-customer-id': "INVALID SALE ID"
+      })
+      const res = mocks.mockRes()
+
+      const { error }  = invalidParamError("x-customer-id")
+      await salesController.getSale(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    it("1.5 - Should return 200 if valid data has been provided", async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user.id,
+        admin: true
+      }, {
+        'x-customer-id': customer.id
+      })
+      const res = mocks.mockRes()
+
+      await salesController.getSale(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        ...modelsExpected.saleModel()
+      }))
     })
   })
 

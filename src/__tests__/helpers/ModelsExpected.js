@@ -57,8 +57,42 @@ class ModelsExpected {
     }
   }
 
+  saleModel(){
+    return {
+      id: expect.any(String),
+      customerId: expect.any(String),
+      projectName: expect.any(String),
+      unityName: expect.any(String),
+      tower: expect.any(String),
+      value: expect.any(String),
+      observations: expect.any(String),
+      users: expect.arrayContaining([expect.objectContaining({
+        id: expect.any(String),
+        fullName: expect.any(String),
+        username: expect.any(String),
+      })]),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+
+    }
+  }
+
+  usersSalesModel(){
+    return {
+      id: expect.any(String),
+      userId: expect.any(String),
+      saleId: expect.any(String),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
+      user: expect.objectContaining({
+        ...this.userModel()
+      })
+    }
+  }
+
 
 }
 
 
 module.exports = ModelsExpected
+
