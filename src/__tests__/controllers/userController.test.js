@@ -1,20 +1,13 @@
 const { UserController } = require('../../controllers')
 const userController = new UserController()
-const databaseSetup = require('../../database')
 const { missingParamError, invalidParamError } = require('../../helpers/Errors')
-const { Users, Profiles } = require('../../models')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
 const modelsExpected = new ModelsExpected()
 
-beforeAll(async () => {
-  try {
-    await databaseSetup()
-  } catch (err) {
-    console.log(err.toString())
-  }
-})
+const Setup = require('../helpers/Setups')
+const setupTests = new Setup()
 
 describe('USER CONTROLLER: tests', () => {
   let profile
@@ -26,12 +19,14 @@ describe('USER CONTROLLER: tests', () => {
 
   beforeAll(async () => {
     try {
-      profile = await Profiles.create(mocks.mockProfile("Administrador", true, false))
-      user = await Users.create(mocks.mockUser("administrador", profile.id), { raw: true })
+      await setupTests.databaseSetup()
+      profile = await setupTests.generateProfile("Administrador", true, false)
+      user = await setupTests.generateUser("Administrador", profile.id, null, true)
       token = await mocks.mockJwtToken(user.id)
 
-      profile2 = await Profiles.create(mocks.mockProfile("Corretor", true, false))
-      user2 = await Users.create(mocks.mockUser("user2", profile2.id))
+      profile2 = await setupTests.generateProfile("Corretor", true, false)
+      user2 = await setupTests.generateUser("user2", profile2.id)
+
     } catch (err) {
       console.log(err)
     }
@@ -39,8 +34,8 @@ describe('USER CONTROLLER: tests', () => {
 
   afterAll(async () => {
     try {
-      await Users.destroy({ where: {} })
-      await Profiles.destroy({ where: {} })
+      await setupTests.destroyUsers()
+      await setupTests.destroyProfiles()
     } catch (err) {
       console.log(err)
     }
@@ -141,7 +136,6 @@ describe('USER CONTROLLER: tests', () => {
         id: expect.any(String),
         email: expect.any(String),
         fullName: expect.any(String),        
-        managerId: expect.any(String),
         phone: expect.any(String),
         profile: expect.objectContaining({                    
           id: expect.any(String),

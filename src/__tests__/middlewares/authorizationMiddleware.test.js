@@ -1,11 +1,13 @@
-const { invalidParamError, missingParamError, forbidenError } = require('../../helpers/Errors')
+const { missingParamError, forbidenError } = require('../../helpers/Errors')
 const { AuthorizationMiddleware } = require('../../middlewares')
 const authorizationMiddleware = new AuthorizationMiddleware()
-const {Users, Profiles} = require('../../models')
 const Mocks = require('../helpers/Mocks')
-const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
-const modelsExpected = new ModelsExpected()
+
+
+const Setup = require('../helpers/Setups')
+const setupTests = new Setup()
+
 
 const mockNext = () => {
   const next = jest.fn()
@@ -18,20 +20,20 @@ describe("AdminController tests", () => {
   let profile 
   let profile2
   beforeAll(async () => {
-    profile = await Profiles.create(mocks.mockProfile("Administrador", true, false))
-    const userAdminCreated = await Users.create(mocks.mockUser("admin", profile.id))
+    await setupTests.databaseSetup()
+    profile = await setupTests.generateProfile("Administrador", true, false)
+    const userAdminCreated = await setupTests.generateUser("admin", profile.id)
     user.tokenAdmin = await mocks.mockJwtToken(userAdminCreated.id)
-    
-    profile2 = await Profiles.create(mocks.mockProfile("Corretor", false, false))
-    const userCreated = await Users.create(mocks.mockUser("user", profile2.id))
-    user.token = await mocks.mockJwtToken(userCreated.id)
 
+    profile2 = await setupTests.generateProfile("Corretor", false, false)
+    const userCreated = await setupTests.generateUser("user", profile2.id)
+    user.token = await mocks.mockJwtToken(userCreated.id)
     })
 
   afterAll(async () => {
     try{
-      await Users.destroy({where: {}})
-      await Profiles.destroy({where: {}})
+      await setupTests.destroyUsers()
+      await setupTests.destroyProfiles()
     }catch(err){
       console.log(err)
     }

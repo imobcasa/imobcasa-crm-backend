@@ -1,21 +1,23 @@
 const {LoginController} = require('../../controllers')
 const loginController = new LoginController()
 const { invalidParamError, missingParamError } = require('../../helpers/Errors')
-const {Users, Profiles} = require('../../models')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
 const modelsExpected = new ModelsExpected
-const databaseSetup = require('../../database')
+
+const Setup = require('../helpers/Setups')
+const setupTests = new Setup()
+
 
 describe('AUTH CONTROLLER: tests', () => {
   let user
   let profile
   beforeAll(async () => {
     try{
-      await databaseSetup()
-      profile = await Profiles.create(mocks.mockProfile("Administrador", true, false))
-      user = await Users.create(mocks.mockUser("mockedUser", profile.id))
+      await setupTests.databaseSetup()
+      profile = await setupTests.generateProfile("Administrador", true, false)
+      user = await setupTests.generateUser("mockedUser", profile.id)
     }catch(err){
       console.log(err)
     }
@@ -23,8 +25,8 @@ describe('AUTH CONTROLLER: tests', () => {
   
   afterAll(async () => {
     try{
-      await Users.destroy({where: {}})
-      await Profiles.destroy({where: {}})
+      await setupTests.destroyUsers()
+      await setupTests.destroyProfiles()
     }catch(err){
       console.log(err.toString())
     }
