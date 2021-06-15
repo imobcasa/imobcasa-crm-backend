@@ -187,7 +187,7 @@ describe("SALES Controller Tests", () => {
       expect(res.status).toHaveBeenCalledWith(200)
       const saleModelExpected = modelsExpected.saleModel()
       delete saleModelExpected.users
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({...saleModelExpected}))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ ...saleModelExpected }))
     })
   })
 
@@ -220,6 +220,17 @@ describe("SALES Controller Tests", () => {
       })
       testPos += 1
     }
+
+    it("3.2 - Should return 400 if invalid customerId has been provided", async () => {
+      const body = mocks.mockSale("INVALID CUSTOMER ID")
+      body.usersIds = [user.id, user2.id]
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError("customerId")
+      await salesController.updateSale(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
   })
 
   // describe("DELETE tests", () => {
