@@ -107,6 +107,24 @@ class Mocks {
     }
   }
 
+  mockSale(customerId){
+    return {
+      customerId,
+      projectName: "ProjectMock",
+      unityName: "unityMock",
+      tower: "towerMock",
+      value: 10000.00,
+      observations: "ObservatiomMock",
+    }
+  }
+
+  mockUsersSales(userId, saleId){
+    return {
+      userId,
+      saleId
+    }
+  }
+
 }
 
 module.exports = Mocks

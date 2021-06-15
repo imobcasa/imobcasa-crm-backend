@@ -1,4 +1,4 @@
-const { Users, Customers, Profiles, CustomerStatuses } = require('../../models')
+const { Users, Customers, Profiles, CustomerStatuses, Sales, UsersSales } = require('../../models')
 const Mocks = require('./Mocks')
 const mocks = new Mocks()
 const databaseSetup = require('../../database')
@@ -22,10 +22,23 @@ class Setup {
     return await Customers.create(mocks.mockCustomer(userId, customerStatusId), { raw })
   }
 
+  async generateSale(customerId, usersId = []){
+    const sale = await Sales.create(mocks.mockSale(customerId))
+    const usersSales = []
+    for(const id of usersId){
+      const userSale = await UsersSales.create(mocks.mockUsersSales(id, sale.id))
+      usersSales.push(userSale)
+    }
+
+    return {
+      sale,
+      usersSales
+    }
+  }
+
   async databaseSetup(){
     await databaseSetup()
   }
-
 
   async destroyProfiles(){
     await Profiles.destroy({where: {}})
@@ -41,6 +54,12 @@ class Setup {
 
   async destroyCustomers(){
     await Customers.destroy({where: {}})
+  }
+
+
+  async destroySales(){
+    await UsersSales.destroy({ where: {}})
+    await Sales.destroy({ where: {}})
   }
 
 }
