@@ -16,7 +16,10 @@ const db = {
     Customers: sequelize.import("./customers"),
     CustomerStatuses: sequelize.import("./customerstatus"),
     Sales: sequelize.import("./sales"),
-    UsersSales: sequelize.import("./userssales")
+    UsersSales: sequelize.import("./userssales"),
+    Documents: sequelize.import("./documents"),
+    DocumentTypes: sequelize.import("./documenttypes"),
+    DocumentStatuses: sequelize.import("./documentstatus"),
 }
 
 db.Users.belongsTo(db.Profiles, {
@@ -65,6 +68,19 @@ db.UsersSales.belongsTo(db.Sales, {
     foreignKey: 'saleId',
     targetKey: "id",
     as: 'sale'
+})
+
+
+db.Documents.belongsTo(db.DocumentStatuses, {
+    foreignKey: 'statusId',
+    targetKey: "id",
+    as: 'status'
+})
+
+db.Documents.belongsTo(db.DocumentTypes, {
+    foreignKey: 'typeId',
+    targetKey: "id",
+    as: 'type'
 })
 
 

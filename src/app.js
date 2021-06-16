@@ -4,7 +4,8 @@ const {
   UserController,
   GenericController,
   CustomerController,
-  SalesController
+  SalesController,
+  DocumentsController
 } = require('./controllers')
 
 const database = require('./database')
@@ -18,7 +19,8 @@ async function app() {
       new LoginController(),
       new GenericController(),
       new CustomerController(),
-      new SalesController()
+      new SalesController(),
+      new DocumentsController()
     ])
 
     await server.listen()

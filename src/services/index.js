@@ -4,4 +4,5 @@ module.exports = {
   UserService: require('./UserService'),
   CustomerService: require('./CustomerService'),
   SalesService: require('./SalesService'),
+  DocumentService: require('./DocumentService'),
 }

@@ -4,4 +4,7 @@ module.exports = {
   CustomerStatusesRepository: require('./CustomerStatusesRepository'),
   SalesRepository: require('./SalesRepository'),
   UsersSalesRepository: require('./UsersSalesRepository'),
+  DocumentStatusesRepository: require('./DocumentStatusesRepository'),
+  DocumentTypesRepository: require('./DocumentTypesRepository'),
+  DocumentsRepository: require('./DocumentsRepository'),
 }

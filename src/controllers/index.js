@@ -3,5 +3,6 @@ module.exports = {
   UserController: require('./UserController'),
   GenericController: require('./GenericController'),
   CustomerController: require('./CustomerController'),
-  SalesController: require('./SalesController')
+  SalesController: require('./SalesController'),
+  DocumentsController: require('./DocumentsController')
 }

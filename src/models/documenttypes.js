@@ -1,7 +1,7 @@
 'use strict';
 const { v4: uuidV4 } = require('uuid')
 
- (sequelize, DataTypes) => {
+ module.exports = (sequelize, DataTypes) => {
   const documentTypes = sequelize.define('documentTypes', {
     name: DataTypes.STRING,
     key: DataTypes.STRING,
