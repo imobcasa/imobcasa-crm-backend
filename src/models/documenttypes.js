@@ -7,8 +7,10 @@ const { v4: uuidV4 } = require('uuid')
     key: DataTypes.STRING,
     providedByCustomer: DataTypes.BOOLEAN
   }, {
-    beforeCreate: (documentType) => {
-      documentType.id = uuidV4()
+    hooks: {
+      beforeCreate: (documentType) => {
+        documentType.id = uuidV4()
+      }
     }
   });
   documentTypes.associate = function(models) {

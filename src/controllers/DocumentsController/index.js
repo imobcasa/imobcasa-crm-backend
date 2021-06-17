@@ -7,15 +7,16 @@ const {
   FileUploadMiddleware
 } = require('../../middlewares')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
-const multer = require("multer");
-const multerConfig = require("../../implementations/fileUpload");
-
-
 
 
 class DocumentsController {
   routes = Router()
   basePath = "/documents"
+  updateStatusPath = "/documents/status"
+  updateTypePath = "/documents/type"
+  updateFilePath = "/documents/file"
+  listStatusesPath = "/documents/status/list"
+  listTypesPath = "/documents/types/list"
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -27,32 +28,161 @@ class DocumentsController {
   async _load() {
 
     this.routes.post(
-      this.basePath, 
-      multer(multerConfig).single("file"), 
-      // this.authenticationMid.checkAuthentication,
+      this.basePath,
+      this.fileUploadMid.catchFile().single("file"),
+      this.authenticationMid.checkAuthentication,
       this.create)
-      
+
+    this.routes.route(this.updateStatusPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .put(this.changeStatus)
+
+    this.routes.route(this.updateFilePath)
+      .all(this.authenticationMid.checkAuthentication)
+      .put(this.changeFile)
+
+    this.routes.route(this.listStatusesPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .get(this.listDocumentStatuses)
+
+
+    this.routes.route(this.listDocumentTypesCustomer)
+      .all(this.authenticationMid.checkAuthentication)
+      .get(this.listDocumentStatuses)
   }
 
-  async create(req, res){
-    try{
-      console.log(req.file)
-
+  async create(req, res) {
+    try {
       const documentService = new DocumentService()
-      const data = documentService.create()
-      return res.status(200).json()
-    }catch(err){
-      if(err instanceof ServiceException){
-        const {statusCode, message} = err
+      const data = await documentService.create({
+        ...req.body,
+        ...req.file
+      })
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
         return res.status(statusCode).json(message)
-      }else {
+      } else {
         console.error(err)
-        const {error} = serverError()
-        const {statusCode, body} = internalError(error)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
         return res.status(statusCode).send(body)
-      }      
+      }
     }
   }
+
+  async listByCustomer(req, res) {
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.listByCustomer(req.headers)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async changeStatus(req, res) {
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.changeStatus(req.body)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async changeType(req, res) {
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.changeType(req.body)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async changeFile(req, res) {
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.changeFile({
+        ...req.file,
+        ...req.headers
+      })
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async listDocumentStatuses(req, res) {
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.listDocumentStatus()
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async listDocumentTypesCustomer(req, res) {
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.listDocumentTypesCustomer(req.headers)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
 }
 
 module.exports = DocumentsController

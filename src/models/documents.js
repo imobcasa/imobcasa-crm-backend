@@ -10,8 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     size: DataTypes.NUMBER,
     customerId: DataTypes.UUID
   }, {
-    beforeCreate: (document) => {
-      document.id = uuidV4()
+    hooks: {
+      beforeCreate: (document) => {
+        document.id = uuidV4()
+      }
     }
   });
   documents.associate = function(models) {

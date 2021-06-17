@@ -4,3 +4,4 @@ memory
 *.sqlite
 .vscode/
 *.pem
+tmp/

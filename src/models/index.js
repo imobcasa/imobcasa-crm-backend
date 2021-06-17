@@ -83,6 +83,12 @@ db.Documents.belongsTo(db.DocumentTypes, {
     as: 'type'
 })
 
+db.Documents.belongsTo(db.Customers, {
+    foreignKey: 'customerId',
+    targetKey: "id",
+    as: 'customer'
+})
+
 
 Object.keys(db).forEach(model => {
     if ("associate" in db[model]) {

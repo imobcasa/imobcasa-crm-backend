@@ -19,13 +19,14 @@ class Mocks {
     return res
   };
 
-  mockReq = (body = {}, query = {}, params = {}, locals = {}, headers = {}) => {
+  mockReq = (body = {}, query = {}, params = {}, locals = {}, headers = {}, file) => {
     return {
       body: body,
       query: query,
       params: params,
       locals: locals,
-      headers: headers
+      headers: headers,
+      file
     }
   }
 
@@ -122,6 +123,40 @@ class Mocks {
     return {
       userId,
       saleId
+    }
+  }
+
+  mockDocumentTypes(name = "Ficha", providedByCustomer = false, key = "FORM_DOC") {
+    return {
+      name,
+      providedByCustomer,
+      key
+    }
+  }
+
+  mockDocumentStatuses(name = "Em análise", order = 1, key = "ANALISIS") {
+    return {
+      name,
+      order,
+      key
+    }
+  }
+
+  mockDocument(
+    originalName = "",
+    path = "",
+    typeId,
+    statusId,
+    size,
+    customerId
+  ) {
+    return {
+      name: originalName,
+      url: path,
+      typeId,
+      statusId,
+      size,
+      customerId
     }
   }
 

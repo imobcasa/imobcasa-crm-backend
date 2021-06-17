@@ -90,6 +90,57 @@ class ModelsExpected {
     }
   }
 
+  documentsModel(){
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      url: expect.any(String),
+      typeId: expect.any(String),
+      statusId: expect.any(String),
+      size: expect.any(Number),
+      customerId: expect.any(String),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+    }
+  }
+
+  documentsModel(){
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      url: expect.any(String),
+      typeId: expect.any(String),
+      statusId: expect.any(String),
+      size: expect.any(Number),
+      customerId: expect.any(String),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+    }
+  }
+
+  documentsStatusesModel(){
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      key: expect.any(String),
+      order: expect.any(Number),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+    }
+  }
+
+  documentsTypesModel(){
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      key: expect.any(String),
+      providedByCustomer: expect.any(Boolean),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+    }
+  }
+
+
 
 }
 

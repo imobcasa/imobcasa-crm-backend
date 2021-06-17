@@ -7,8 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     key: DataTypes.STRING,
     order: DataTypes.NUMBER
   }, {
-    beforeCreate: (documentStatus) => {
-      documentStatus.id = uuidV4()
+    hooks: {
+      beforeCreate: (documentStatus) => {
+        documentStatus.id = uuidV4()
+      }
     }
   });
   documentStatus.associate = function(models) {

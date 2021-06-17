@@ -1,4 +1,14 @@
-const { Users, Customers, Profiles, CustomerStatuses, Sales, UsersSales } = require('../../models')
+const { 
+  Users, 
+  Customers, 
+  Profiles, 
+  CustomerStatuses, 
+  Sales, 
+  UsersSales,
+  DocumentTypes,
+  Documents,
+  DocumentStatuses
+} = require('../../models')
 const Mocks = require('./Mocks')
 const mocks = new Mocks()
 const databaseSetup = require('../../database')
@@ -20,6 +30,46 @@ class Setup {
 
   async generateCustomer(userId, customerStatusId, raw = false) {
     return await Customers.create(mocks.mockCustomer(userId, customerStatusId), { raw })
+  }
+
+  async generateDocumentType(
+    name, 
+    providedByCustomer, 
+    key
+  ){
+    return await DocumentTypes.create(
+      mocks.mockDocumentTypes(name, providedByCustomer, key)
+      )
+  }
+
+  async generateDocumentStatus(
+    name, 
+    order, 
+    key
+  ){
+    return await DocumentStatuses.create(
+      mocks.mockDocumentStatuses(name, order, key)
+      )
+  }
+
+  async generateDocument(
+    originalName,
+    path,
+    typeId,
+    statusId,
+    size,
+    customerId
+  ){
+    return await Documents.create(
+      mocks.mockDocument(
+        originalName,
+        path,
+        typeId,
+        statusId,
+        size,
+        customerId
+      )
+    )
   }
 
   async generateSale(customerId, usersId = []){
@@ -61,6 +111,20 @@ class Setup {
     await UsersSales.destroy({ where: {}})
     await Sales.destroy({ where: {}})
   }
+
+  async destroyDocumentTypes(){
+    await DocumentTypes.destroy({ where: {}})
+  }
+
+  async destroyDocumentStatuses(){
+    await DocumentStatuses.destroy({ where: {}})
+  }
+
+  async destroyDocuments(){
+    await Documents.destroy({ where: {}})
+  }
+
+
 
 }
 
