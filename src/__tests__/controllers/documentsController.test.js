@@ -440,18 +440,18 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
 
   describe("6 - LIST DOCUMENTS TYPES tests", () => {
 
-    it("6.1 - Should return 400 if no providedByCustomer was provided", async () => {
+    it("6.1 - Should return 400 if no provided-customer was provided", async () => {
       const req = mocks.mockReq()
       const res = mocks.mockRes()
       await documentsController.listDocumentTypesCustomer(req, res)
-      const { error } = missingParamError("providedByCustomer")
+      const { error } = missingParamError("provided-customer")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)      
     })
 
     it("6.2 - Should return 200", async () => {
       const header = {
-        providedByCustomer: 1
+        'provided-customer': 1
       }
       const req = mocks.mockReq(null, null, null, null, header)
       const res = mocks.mockRes()
@@ -466,7 +466,7 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
 
     it("6.3 - Should return 200", async () => {
       const header = {
-        providedByCustomer: 0
+        'provided-customer': 0
       }
       const req = mocks.mockReq(null, null, null, null, header)
       const res = mocks.mockRes()

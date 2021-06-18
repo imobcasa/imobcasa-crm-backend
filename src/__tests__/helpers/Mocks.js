@@ -64,7 +64,7 @@ class Mocks {
   mockPwdReset(password, id) {
     return {
       password,
-      id
+      'x-user-id': id
     }
   }
 

@@ -78,7 +78,8 @@ class CustomerRepository {
   async getByPhone(phone, raw){
     return await Customers.findOne({
       where: {
-        phone
+        phone,
+        
       },
       raw,
       include: ['user', 'status']

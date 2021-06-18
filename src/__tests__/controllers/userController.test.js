@@ -291,10 +291,10 @@ describe('USER CONTROLLER: tests', () => {
   describe('RESET PWD tests', () => {
     test(`Should return 400 if no id has been provided`, async () => {
       const body = mocks.mockPwdReset("newPassword", user.id)
-      delete body.id
+      delete body['x-user-id']
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
-      const { error } = missingParamError('id')
+      const { error } = missingParamError('x-user-id')
       await userController.resetPassword(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)

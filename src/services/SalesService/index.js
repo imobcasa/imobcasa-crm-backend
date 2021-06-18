@@ -38,9 +38,13 @@ class UserService extends Service {
     this._checkRequiredFields(this._getOneRequiredFields, fields)
 
     const customerId = fields['x-customer-id']
+    const customer = await this._customersRespository.getOne({ id: customerId})
+    this._checkEntityExsits(customer, 'x-customer-id')
 
     const sale = await this._salesRepository.getSaleByCustomerId({customerId})
-    this._checkEntityExsits(sale, 'x-customer-id')
+    if(!sale){
+      return {}
+    }
 
     const usersSales = await this._usersSalesRepository.getUsersSalesBySaleId({saleId: sale.id})
     
@@ -51,9 +55,6 @@ class UserService extends Service {
         username: userSale.user.username,
       }
     })
-    // sale.users = users
-
-
 
     return {
       id: sale.id,

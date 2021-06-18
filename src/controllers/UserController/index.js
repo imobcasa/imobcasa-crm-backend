@@ -13,7 +13,7 @@ class UserController {
   basePath = "/users"
   searchPath = `/users/search`
   changePwdPath = '/me/password'
-  resetPwdPath = `${this.getOnePath}/password/reset`
+  resetPwdPath = `/users/password/reset`
   
 
   constructor() {
@@ -145,7 +145,7 @@ class UserController {
   async changePassword(req, res) {
     try {
       const userService = new UserService()
-      const result = await userService.changePassword({
+      await userService.changePassword({
         ...req.body,
         ...req.locals
       })
@@ -167,7 +167,7 @@ class UserController {
     try {
       const userService = new UserService()
       await userService.resetPassword({
-        ...req.params,
+        ...req.headers,
         ...req.body
       })
       return res.status(204).json()

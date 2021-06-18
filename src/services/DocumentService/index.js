@@ -38,7 +38,7 @@ class DocumentService extends Service {
   ]
 
   _listTypesRequiredFiels = [
-    "providedByCustomer"
+    "provided-customer"
   ]
 
   constructor(){
@@ -166,8 +166,9 @@ class DocumentService extends Service {
 
   async listDocumentTypesCustomer(fields){
     this._checkRequiredFields(this._listTypesRequiredFiels, fields)
+    const providedByCustomer = parseInt(fields['provided-customer'])
     return await this._documentTypesRepository.listCustomerTypes({
-      providedByCustomer: fields.providedByCustomer === 1 ? true : false
+      providedByCustomer: providedByCustomer === 1 ? true : false
     })
   }
 

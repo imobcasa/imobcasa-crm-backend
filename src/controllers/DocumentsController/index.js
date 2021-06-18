@@ -33,22 +33,34 @@ class DocumentsController {
       this.authenticationMid.checkAuthentication,
       this.create)
 
+    this.routes.put(
+      this.updateFilePath,
+      this.fileUploadMid.catchFile().single("file"),
+      this.authenticationMid.checkAuthentication,
+      this.changeFile)
+
+    this.routes.get(this.basePath,
+      this.authenticationMid.checkAuthentication,
+      this.listByCustomer)
+
     this.routes.route(this.updateStatusPath)
       .all(this.authenticationMid.checkAuthentication)
       .put(this.changeStatus)
 
-    this.routes.route(this.updateFilePath)
+    this.routes.route(this.updateTypePath)
       .all(this.authenticationMid.checkAuthentication)
-      .put(this.changeFile)
+      .put(this.changeType)
+
 
     this.routes.route(this.listStatusesPath)
       .all(this.authenticationMid.checkAuthentication)
       .get(this.listDocumentStatuses)
 
-
-    this.routes.route(this.listDocumentTypesCustomer)
+    this.routes.route(this.listTypesPath)
       .all(this.authenticationMid.checkAuthentication)
-      .get(this.listDocumentStatuses)
+      .get(this.listDocumentTypesCustomer)
+
+
   }
 
   async create(req, res) {

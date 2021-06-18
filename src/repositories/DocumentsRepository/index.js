@@ -29,7 +29,8 @@ class DocumentsRepository {
     return await Documents.findAll({
       where: {
         customerId
-      }
+      },
+      include: ['status', 'type']
     })
   }
 
