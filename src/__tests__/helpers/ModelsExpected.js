@@ -152,6 +152,17 @@ class ModelsExpected {
     }
   }
 
+  customerSatatusesModel(){
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      order: expect.any(Number),
+      key: expect.any(String),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+    }
+  }
+
 
 }
 
