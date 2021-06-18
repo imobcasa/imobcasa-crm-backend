@@ -141,6 +141,17 @@ class ModelsExpected {
   }
 
 
+  profilesModel(){
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      admin: expect.any(Boolean),
+      teamManager: expect.any(Boolean),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+    }
+  }
+
 
 }
 
