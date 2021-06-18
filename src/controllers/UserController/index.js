@@ -14,6 +14,7 @@ class UserController {
   searchPath = `/users/search`
   changePwdPath = '/me/password'
   resetPwdPath = `${this.getOnePath}/password/reset`
+  
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()

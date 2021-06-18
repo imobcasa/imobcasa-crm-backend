@@ -7,4 +7,5 @@ module.exports = {
   DocumentStatusesRepository: require('./DocumentStatusesRepository'),
   DocumentTypesRepository: require('./DocumentTypesRepository'),
   DocumentsRepository: require('./DocumentsRepository'),
+  ProfilesRepository: require('./ProfilesRepository'),
 }

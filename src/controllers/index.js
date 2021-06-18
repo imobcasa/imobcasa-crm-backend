@@ -4,5 +4,6 @@ module.exports = {
   GenericController: require('./GenericController'),
   CustomerController: require('./CustomerController'),
   SalesController: require('./SalesController'),
-  DocumentsController: require('./DocumentsController')
+  DocumentsController: require('./DocumentsController'),
+  ProfilesController: require('./ProfilesController')
 }
