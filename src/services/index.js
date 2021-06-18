@@ -6,4 +6,5 @@ module.exports = {
   SalesService: require('./SalesService'),
   DocumentService: require('./DocumentService'),
   ProfileService: require('./ProfileService'),
+  CustomerStatusesService: require('./CustomerStatusesService'),
 }

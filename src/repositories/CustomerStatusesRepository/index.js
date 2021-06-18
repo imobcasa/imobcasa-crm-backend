@@ -26,6 +26,10 @@ class CustomerStatusesRepository {
       }
     })
   }
+
+  async listAll(){
+    return await CustomerStatuses.findAll()
+  }
   
   
 }

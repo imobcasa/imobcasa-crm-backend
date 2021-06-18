@@ -1,3 +1,4 @@
+
 module.exports = {
   LoginController: require('./LoginController'),
   UserController: require('./UserController'),
@@ -5,5 +6,6 @@ module.exports = {
   CustomerController: require('./CustomerController'),
   SalesController: require('./SalesController'),
   DocumentsController: require('./DocumentsController'),
-  ProfilesController: require('./ProfilesController')
+  ProfilesController: require('./ProfilesController'),
+  CustomerStatusesController: require('./CustomerStatusesController')
 }

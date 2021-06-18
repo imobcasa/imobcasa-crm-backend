@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { ProfileService } = require('../../services')
+const { CustomerStatusesService } = require('../../services')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 const {
   AuthenticationMiddleware,
@@ -8,9 +8,9 @@ const {
 const { internalError } = require('../../helpers/Protocols')
 const { serverError } = require('../../helpers/Errors')
 
-class ProfilesController {
+class CustomerStatusesController {
   routes = Router()
-  basePath = "/profiles/users/list"
+  basePath = "/statuses/customers/list"
   
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -30,8 +30,8 @@ class ProfilesController {
   
   async listAll(req, res){
     try {
-      const profileService = new ProfileService()
-      const user = await profileService.listAll()
+      const customerStatusesService = new CustomerStatusesService()
+      const user = await customerStatusesService.listAll()
       return res.status(200).json(user)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -49,4 +49,4 @@ class ProfilesController {
 }
 
 
-module.exports = ProfilesController
+module.exports = CustomerStatusesController
