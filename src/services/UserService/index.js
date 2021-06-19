@@ -1,5 +1,5 @@
 const Service = require('../Service')
-const { UserRepository } = require('../../repositories')
+const { UserRepository, ProfilesRepository } = require('../../repositories')
 
 class UserService extends Service {
   _requiredFields = ['fullName', 'username', 'email', 'password', 'admin', 'active']
@@ -14,6 +14,7 @@ class UserService extends Service {
   constructor(){
     super()
     this._userRepository = new UserRepository()
+    this._profilesRepository = new ProfilesRepository()
   }
 
   
@@ -42,7 +43,19 @@ class UserService extends Service {
       password      
     } = fields
 
+    if(managerId){
+      this._checkEntityExsits(
+        await this._userRepository.getOne({ id: managerId }),
+        "managerId"
+      )
+    }
     
+    this._checkEntityExsits(
+      await this._profilesRepository.getOne({ id: profileId }),
+      "profileId"
+    )
+
+
     return await this._userRepository.create({
       fullName,
       username,

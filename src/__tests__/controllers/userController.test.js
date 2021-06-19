@@ -96,6 +96,27 @@ describe('USER CONTROLLER: tests', () => {
         expect(res.json).toBeCalledWith(`MissingParamError: ${field}`)
       })
     }
+    test(`POST: Should return 400 if invalid managerId has beem send`, async () => {
+      const user = mocks.mockUser()
+      user.managerId = "INVALID MANAGER ID"
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
+      await userController._create(req, res)
+      const { error } = invalidParamError("managerId")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith(error)
+    })
+
+    test(`POST: Should return 400 if invalid profileId has beem send`, async () => {
+      const user = mocks.mockUser()
+      user.profileId = "INVALID PROFILE ID"
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
+      await userController._create(req, res)
+      const { error } = invalidParamError("profileId")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith(error)
+    })
     test('POST: Should return 200 if user has been created', async () => {
       const user = mocks.mockUser("newUser", profile.id)
       const res = mocks.mockRes()

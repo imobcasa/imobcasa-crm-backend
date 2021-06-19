@@ -7,6 +7,14 @@ class ProfileRepository {
     return await Profiles.findAll()
   }
 
+  async getOne({ id }){
+    return await Profiles.findOne({
+      where: {
+        id
+      }
+    })
+  }
+
 }
 
 
