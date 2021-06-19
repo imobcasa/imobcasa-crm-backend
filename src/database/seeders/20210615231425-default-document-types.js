@@ -40,7 +40,7 @@ module.exports = {
         id: uuidV4(),
         name: 'Comprovante de endereço',
         providedByCustomer: true,
-        key: "",
+        key: "ADDRESS_DOC",
         createdAt: new Date(),
         updatedAt: new Date()
       },

@@ -182,18 +182,11 @@ class DocumentService extends Service {
     )
 
 
-    if(await this._checkCustomerRequiredDocuments(customerId)){
-      const customerStatus = await this._customerStatusesRepository.getStatusByKey("DOC_ANALISIS")
-      await this._customerRepository.updateStatus({
-        customerId,
-        statusId: customerStatus.id
-      })
-    }
 
 
     const status = await this._documentStatusesRepository.getFirstStatus()
         
-    return await this._documentsRepository.create({
+    const document = await this._documentsRepository.create({
       name,
       url,
       typeId,
@@ -201,6 +194,15 @@ class DocumentService extends Service {
       size,
       customerId
     })
+
+    
+    if(await this._checkCustomerRequiredDocuments(customerId)){
+      await this._updateCustomerStatusByStatusKey(customerId, "DOC_ANALISIS")
+    }else {
+      await this._updateCustomerStatusByStatusKey(customerId, "DOC_PENDING")
+    }
+
+    return document
 
   }
 
@@ -239,7 +241,7 @@ class DocumentService extends Service {
     })
 
     //UPDATE IF CUSTOMER HAS ALL NECESSARY DOCUMENTATIONS
-    if(this._checkCustomerRequiredDocuments(document.customerId)){
+    if(await this._checkCustomerRequiredDocuments(document.customerId)){
       if(this._deniedStatusDocsParseToCustomerStatus(status)){
         const newCustomerStatusKey = this._deniedStatusDocsParseToCustomerStatus(status)
         await this._updateCustomerStatusByStatusKey(newCustomerStatusKey)
