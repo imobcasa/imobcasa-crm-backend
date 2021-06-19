@@ -21,6 +21,7 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
 
   let documentStatus
   let documentStatus2
+  let documentStatus3
   let documentType
   let documentType2
   let document
@@ -41,10 +42,12 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
 
       customerStatus = await setupTests.generateCustomerStatus("Pendente de Documentação", 1, "DOC_PENDING")
       customerStatus2 = await setupTests.generateCustomerStatus("Documentação em análise", 2, "DOC_ANALISIS")
+      
       customer = await setupTests.generateCustomer(user.id, customerStatus.id)
 
       documentStatus = await setupTests.generateDocumentStatus("Em análise", 1, "ANALISIS")
       documentStatus2 = await setupTests.generateDocumentStatus("Negado pelo documentista", 2, "DENIED_DOCUMENTIST")
+      documentStatus3 = await setupTests.generateDocumentStatus("Aprovado", 4, "APPROVED")
       documentType = await setupTests.generateDocumentType("Ficha", true, "FORM_DOC")
       documentType2 = await setupTests.generateDocumentType("Comprovante comissão corretor", false, "BROKER_COMMISSION_VOUCHER_DOC")
       document = await setupTests.generateDocument(

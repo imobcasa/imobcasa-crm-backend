@@ -107,11 +107,13 @@ class DocumentsRepository {
   }
 
   async findAllByMultipleStatuses({ 
-    ids = []
+    ids = [],
+    customerId
   }) {
     return await Documents.findAll({
       where: {
-        id: ids
+        statusId: ids,
+        customerId
       }
     })
   }  
