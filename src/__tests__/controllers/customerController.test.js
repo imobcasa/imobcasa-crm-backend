@@ -183,7 +183,6 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       body.phone = "1100000000"
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
-      console.log(req)
       await customerController._create(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.customerModel()))

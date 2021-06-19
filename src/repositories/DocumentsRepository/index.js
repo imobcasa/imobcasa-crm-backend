@@ -1,7 +1,6 @@
 const { Documents } = require('../../models')
 
 
-
 class DocumentsRepository {
 
   async create({
@@ -85,6 +84,37 @@ class DocumentsRepository {
       }
     })
   }
+
+  async findByCustomerAndTypeId({
+    customerId,
+    typeId
+  }){
+    return await Documents.findOne({
+      where: {
+        customerId,
+        typeId
+      }
+    })
+  }
+
+
+  async delete({ id }) {
+    return await Documents.destroy({
+      where: {
+        id
+      }
+    })
+  }
+
+  async findAllByMultipleStatuses({ 
+    ids = []
+  }) {
+    return await Documents.findAll({
+      where: {
+        id: ids
+      }
+    })
+  }  
 
 }
 

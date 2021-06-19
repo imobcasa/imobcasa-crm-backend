@@ -1,7 +1,6 @@
 const { DocumentStatuses } = require('../../models')
 
 
-
 class DocumentStatusesRepository {
  
   async getOne({ id }) {
@@ -25,8 +24,14 @@ class DocumentStatusesRepository {
   async list(){
     return await DocumentStatuses.findAll()
   }
-  
-  
+
+  async getByMultipleKeys({ keys = [] }) {
+    return await DocumentStatuses.findAll({
+      where: {
+        key: keys
+      }
+    })
+  }  
 }
 
 module.exports = DocumentStatusesRepository

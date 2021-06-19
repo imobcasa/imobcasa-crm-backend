@@ -60,6 +60,10 @@ class DocumentsController {
       .all(this.authenticationMid.checkAuthentication)
       .get(this.listDocumentTypesCustomer)
 
+    this.routes.delete(
+      this.basePath, 
+      this.authenticationMid.checkAuthentication, 
+      this.deleteDocument)
 
   }
 
@@ -181,6 +185,24 @@ class DocumentsController {
     try {
       const documentService = new DocumentService()
       const data = await documentService.listDocumentTypesCustomer(req.headers)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async deleteDocument(req, res){
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.deleteDocument(req.headers)
       return res.status(200).json(data)
     } catch (err) {
       if (err instanceof ServiceException) {

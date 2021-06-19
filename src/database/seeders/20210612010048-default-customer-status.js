@@ -39,8 +39,16 @@ module.exports = {
       },
       {
         id: uuidV4(),
-        name: 'Documentação aprovada',
+        name: 'Reprovado',
         order: 5,
+        key: "DENIED",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuidV4(),
+        name: 'Documentação aprovada',
+        order: 6,
         key: "DOC_APPROVED",
         createdAt: new Date(),
         updatedAt: new Date()
@@ -48,7 +56,7 @@ module.exports = {
       {
         id: uuidV4(),
         name: 'Venda gerada',
-        order: 6,
+        order: 7,
         key: "SALE_GENERATED",
         createdAt: new Date(),
         updatedAt: new Date()
@@ -56,7 +64,7 @@ module.exports = {
       {
         id: uuidV4(),
         name: 'Finalizado',
-        order: 7,
+        order: 8,
         key: "DONE",
         createdAt: new Date(),
         updatedAt: new Date()

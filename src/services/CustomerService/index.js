@@ -152,7 +152,7 @@ class CustomerService extends Service {
     this._checkUserAccessToCustomer(fields.reqUserId, customer.userId, fields.admin)
 
     const customerSamePhone = await this._customerRepository.getByPhone(fields.phone, true)
-    if(customer.id !== customerSamePhone.id){
+    if(customer.id !== customerSamePhone?.id){
       this._checkEntityExsits(customerSamePhone, "phone", true)
     }
 

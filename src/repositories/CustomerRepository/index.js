@@ -86,6 +86,19 @@ class CustomerRepository {
     })
   }
 
+  async updateStatus({
+    statusId,
+    customerId
+  }) {
+    return await Customers.update({
+      statusId
+    }, {
+      where: {
+        id: customerId
+      }
+    })
+  }
+
 }
 
 module.exports = CustomerRepository

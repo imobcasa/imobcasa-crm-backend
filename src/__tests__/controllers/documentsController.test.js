@@ -16,6 +16,7 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
   let profile
 
   let customerStatus
+  let customerStatus2
   let customer
 
   let documentStatus
@@ -25,6 +26,7 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
   let document
   beforeAll(async () => {
     try {
+      await setupTests.databaseSetup()
       await setupTests.destroyDocuments()
       await setupTests.destroyDocumentTypes()
       await setupTests.destroyDocumentStatuses()
@@ -33,11 +35,12 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
       await setupTests.destroyUsers()
       await setupTests.destroyProfiles()
 
-      await setupTests.databaseSetup()
+
       profile = await setupTests.generateProfile("Administrador", true, false)
       user = await setupTests.generateUser("mockedUser", profile.id)
 
       customerStatus = await setupTests.generateCustomerStatus("Pendente de Documentação", 1, "DOC_PENDING")
+      customerStatus2 = await setupTests.generateCustomerStatus("Documentação em análise", 2, "DOC_ANALISIS")
       customer = await setupTests.generateCustomer(user.id, customerStatus.id)
 
       documentStatus = await setupTests.generateDocumentStatus("Em análise", 1, "ANALISIS")
@@ -480,7 +483,7 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
     })
   })
 
-  describe("7 - CHANGE TYPe tests", () => {
+  describe("7 - CHANGE TYPE tests", () => {
     it("7.1 - Should return 400 if no id has been provided", async () => {
       const body = {
         typeId: documentType2.id,
@@ -550,6 +553,40 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
       await documentsController.changeType(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith([1])
+    })
+  })
+
+  describe("8 - DELETE DOCUMENTS tests", () => {
+    it("8.1 - Should return 400 if no id has been provided", async () => {
+      	const req = mocks.mockReq()
+        const res = mocks.mockRes()
+        const { error } = missingParamError("x-document-id")
+        await documentsController.deleteDocument(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it("8.2 - Should return 400 if invalid id has been provided", async () => {
+      const headers = {
+        'x-document-id': "invalidID"
+      }
+      const req = mocks.mockReq(null, null, null, null, headers)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError("x-document-id")
+      await documentsController.deleteDocument(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    it("8.3 - Should return 200 if valid id has been provided", async () => {
+      const headers = {
+        'x-document-id': document.id
+      }
+      const req = mocks.mockReq(null, null, null, null, headers)
+      const res = mocks.mockRes()
+      await documentsController.deleteDocument(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(1)
     })
   })
 })
