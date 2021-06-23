@@ -4,7 +4,7 @@ const { UserRepository, ProfilesRepository } = require('../../repositories')
 class UserService extends Service {
   _requiredFields = ['fullName', 'username', 'email', 'password', 'admin', 'active']
   _updateRequiredFields = ['id']
-  _deleteUserRequiredFields = ['id']
+  _deleteUserRequiredFields = ['x-user-id']
   _getUserRequiredFields = ['x-user-id']
   _changePasswordRequiredFields = ['password', 'newPassword', 'reqUserId', 'admin']
   _resetPasswordRequiredFields = ['password', 'x-user-id']
@@ -86,9 +86,13 @@ class UserService extends Service {
 
   async deleteUser(fields) {
     await this._checkRequiredFields(this._deleteUserRequiredFields, fields)
-    const user = await this._userRepository.getOne(fields)
+    const user = await this._userRepository.getOne({
+      id: fields['x-user-id']
+    })
     await this._checkEntityExsits(user)
-    return await this._userRepository.delete(fields)
+    return await this._userRepository.delete({
+      id:  fields['x-user-id']
+    })
   }
 
   async getUser(fields) {

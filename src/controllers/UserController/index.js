@@ -127,7 +127,7 @@ class UserController {
   async _delete(req, res) {
     try {
       const userService = new UserService()
-      const result = await userService.deleteUser(req.params)
+      const result = await userService.deleteUser(req.headers)
       res.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {

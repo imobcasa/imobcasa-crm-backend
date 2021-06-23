@@ -365,21 +365,27 @@ describe('USER CONTROLLER: tests', () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq(user)
       await userController._delete(req, res)
+      const { error } = missingParamError("x-user-id")
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.json).toBeCalledWith('MissingParamError: id')
+      expect(res.json).toBeCalledWith(error)
     })
     test('DELETE: Should return 400 if invalid id has beem send', async () => {
       const user = mocks.mockUser()
       user.id = 'invalidId'
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, { id: "invalid user id" }, null)
+      const req = mocks.mockReq(null, null, null, null, {
+        'x-user-id': "invalid userID"
+      })
       await userController._delete(req, res)
+      const { error } = invalidParamError("x-user-id")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('InvalidParamError: id')
     })
     test('DELETE: Should return 200 username has beem deleted by id', async () => {
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, { id: user2.id }, null)
+      const req = mocks.mockReq(null, null, null, null, {
+        'x-user-id': user2.id
+      })
       await userController._delete(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toBeCalledWith(1)
