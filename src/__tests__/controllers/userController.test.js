@@ -1,6 +1,6 @@
 const { UserController } = require('../../controllers')
 const userController = new UserController()
-const { missingParamError, invalidParamError } = require('../../helpers/Errors')
+const { missingParamError, invalidParamError, forbidenError } = require('../../helpers/Errors')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -211,6 +211,115 @@ describe('USER CONTROLLER: tests', () => {
         profileId: profile2.id
       }))
     })
+  })
+
+  describe("UPDATE MY USER tests", () => {
+    const requiredFields = ['id', 'fullName', 'email', 'phone', 'username']
+    for(const field of requiredFields){
+      it(`Should return 400 if no ${field} has been provided`, async () => {
+        const locals = {
+          reqUserId: user.id
+        }
+        const {
+          fullName,
+          username,
+          email,
+          phone
+        } = mocks.mockUser()
+        const data = {
+          fullName,
+          username,
+          email,
+          phone,
+          id: user.id
+        }
+
+        delete data[`${field}`]
+        const res = mocks.mockRes()
+        const req = mocks.mockReq(data, null, null, locals)
+        await userController._updateMyUser(req, res)
+        const { error } = missingParamError(field)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toBeCalledWith(error)
+      })
+    }
+    it(`Should return 400 if invalid id has been provided`, async () => {
+      const locals = {
+        reqUserId: "INVALID ID"
+      }
+      const {
+        fullName,
+        username,
+        email,
+        phone
+      } = mocks.mockUser()
+      const data = {
+        fullName,
+        username,
+        email,
+        phone,
+        id: "INVALID ID"
+      }
+
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(data, null, null, locals)
+      await userController._updateMyUser(req, res)
+      const { error } = invalidParamError("id")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith(error)
+    })
+
+    it(`Should return 400 if id provided does not match with requester user id`, async () => {
+      const locals = {
+        reqUserId: "anotherUserID"
+      }
+      const {
+        fullName,
+        username,
+        email,
+        phone
+      } = mocks.mockUser()
+      const data = {
+        fullName,
+        username,
+        email,
+        phone,
+        id: user.id
+      }
+
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(data, null, null, locals)
+      await userController._updateMyUser(req, res)
+      const { error } = forbidenError("id")
+      expect(res.status).toHaveBeenCalledWith(403)
+      expect(res.json).toBeCalledWith(error)
+    })
+
+    it(`Should return 200 if user was updated`, async () => {
+      const locals = {
+        reqUserId: user.id
+      }
+      const {
+        fullName,
+        username,
+        email,
+        phone
+      } = mocks.mockUser()
+      const data = {
+        fullName: "ADministrador novo nome",
+        username,
+        email,
+        phone,
+        id: user.id
+      }
+
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(data, null, null, locals)
+      await userController._updateMyUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toBeCalledWith([1])
+    })
+
   })
 
   describe('CHANGE PWD tests', () => {

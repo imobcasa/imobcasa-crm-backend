@@ -45,6 +45,25 @@ class UserRepository {
     return user
   }
 
+  async updateMyUser({
+    fullName,
+    username,
+    email,
+    phone,
+    id
+  }){       
+    return await Users.update({
+      fullName,
+      username,
+      email,
+      phone
+    }, {
+      where: {
+        id
+      }
+    })
+  }
+
   async delete(fields){
     const result = await Users.destroy({
       where:

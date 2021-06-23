@@ -124,6 +124,28 @@ class UserController {
     }
   }
 
+  async _updateMyUser(req, res) {
+    try {
+      const userService = new UserService()
+      const user = await userService.updateMyUser({
+        ...req.body,
+        ...req.locals
+      })
+
+      return res.status(200).json(user)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
   async _delete(req, res) {
     try {
       const userService = new UserService()

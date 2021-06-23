@@ -10,6 +10,7 @@ class UserService extends Service {
   _resetPasswordRequiredFields = ['password', 'x-user-id']
   _listRequiredFields = ['x-profiles']
   _createRequiredFields = ['fullName', 'username', 'profileId', 'password']
+  _updateMyUserRequiredFields = ['id', 'fullName', 'email', 'phone', 'username', 'reqUserId']
 
   constructor(){
     super()
@@ -82,6 +83,36 @@ class UserService extends Service {
     const user = await this._userRepository.getOne(fields)
     await this._checkEntityExsits(user)    
     return await this._userRepository.update(user, fields)
+  }
+
+  async updateMyUser(fields) {
+    await this._checkRequiredFields(this._updateMyUserRequiredFields, fields)    
+
+    const {
+      fullName,
+      username,
+      email,
+      phone,
+      id,
+      reqUserId
+    } = fields
+
+    if(id !== reqUserId){
+      this._throwForbidenError("id")
+    }
+
+    const user = await this._userRepository.getOne({
+      id: id
+    })
+    await this._checkEntityExsits(user)    
+
+    return await this._userRepository.updateMyUser({
+      fullName,
+      username,
+      email,
+      phone,
+      id
+    })
   }
 
   async deleteUser(fields) {
