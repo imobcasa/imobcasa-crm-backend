@@ -214,7 +214,7 @@ describe('USER CONTROLLER: tests', () => {
   })
 
   describe("UPDATE MY USER tests", () => {
-    const requiredFields = ['id', 'fullName', 'email', 'phone', 'username']
+    const requiredFields = ['fullName', 'email', 'phone', 'username']
     for(const field of requiredFields){
       it(`Should return 400 if no ${field} has been provided`, async () => {
         const locals = {
@@ -231,13 +231,12 @@ describe('USER CONTROLLER: tests', () => {
           username,
           email,
           phone,
-          id: user.id
         }
 
         delete data[`${field}`]
         const res = mocks.mockRes()
         const req = mocks.mockReq(data, null, null, locals)
-        await userController._updateMyUser(req, res)
+        await userController._updateMyUserData(req, res)
         const { error } = missingParamError(field)
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toBeCalledWith(error)
@@ -263,35 +262,9 @@ describe('USER CONTROLLER: tests', () => {
 
       const res = mocks.mockRes()
       const req = mocks.mockReq(data, null, null, locals)
-      await userController._updateMyUser(req, res)
+      await userController._updateMyUserData(req, res)
       const { error } = invalidParamError("id")
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.json).toBeCalledWith(error)
-    })
-
-    it(`Should return 400 if id provided does not match with requester user id`, async () => {
-      const locals = {
-        reqUserId: "anotherUserID"
-      }
-      const {
-        fullName,
-        username,
-        email,
-        phone
-      } = mocks.mockUser()
-      const data = {
-        fullName,
-        username,
-        email,
-        phone,
-        id: user.id
-      }
-
-      const res = mocks.mockRes()
-      const req = mocks.mockReq(data, null, null, locals)
-      await userController._updateMyUser(req, res)
-      const { error } = forbidenError("id")
-      expect(res.status).toHaveBeenCalledWith(403)
       expect(res.json).toBeCalledWith(error)
     })
 
@@ -315,7 +288,7 @@ describe('USER CONTROLLER: tests', () => {
 
       const res = mocks.mockRes()
       const req = mocks.mockReq(data, null, null, locals)
-      await userController._updateMyUser(req, res)
+      await userController._updateMyUserData(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toBeCalledWith([1])
     })

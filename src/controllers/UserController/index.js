@@ -45,7 +45,7 @@ class UserController {
 
     this.routes.route(this.changeMyUserData)
       .all(this.authenticationMid.checkAuthentication)
-      .put(this.updateMyUser)
+      .put(this._updateMyUserData)
 
     this.routes.route(this.resetPwdPath)
       .all(this.authenticationMid.checkAuthentication)
@@ -129,7 +129,7 @@ class UserController {
     }
   }
 
-  async _updateMyUser(req, res) {
+  async _updateMyUserData(req, res) {
     try {
       const userService = new UserService()
       const user = await userService.updateMyUser({

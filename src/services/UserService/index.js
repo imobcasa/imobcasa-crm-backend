@@ -10,7 +10,7 @@ class UserService extends Service {
   _resetPasswordRequiredFields = ['password', 'x-user-id']
   _listRequiredFields = ['x-profiles']
   _createRequiredFields = ['fullName', 'username', 'profileId', 'password']
-  _updateMyUserRequiredFields = ['id', 'fullName', 'email', 'phone', 'username', 'reqUserId']
+  _updateMyUserRequiredFields = ['fullName', 'email', 'phone', 'username', 'reqUserId']
 
   constructor(){
     super()
@@ -93,16 +93,11 @@ class UserService extends Service {
       username,
       email,
       phone,
-      id,
       reqUserId
     } = fields
 
-    if(id !== reqUserId){
-      this._throwForbidenError("id")
-    }
-
     const user = await this._userRepository.getOne({
-      id: id
+      id: reqUserId
     })
     await this._checkEntityExsits(user)    
 
@@ -111,7 +106,7 @@ class UserService extends Service {
       username,
       email,
       phone,
-      id
+      id: reqUserId
     })
   }
 
