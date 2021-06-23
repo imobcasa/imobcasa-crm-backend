@@ -49,6 +49,8 @@ class LoginService extends Service {
       id: user.id,
       fullName: user.fullName,
       username: user.username,
+      email: user.email,
+      phone: user.phone,
       profile: {
         name: user.profile.name,
         admin: user.profile.admin,
