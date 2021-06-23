@@ -13,8 +13,9 @@ class UserController {
   basePath = "/users"
   searchPath = `/users/search`
   changePwdPath = '/me/password'
+  changeMyUserData = '/me/user'
   resetPwdPath = `/users/password/reset`
-  
+
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -41,6 +42,10 @@ class UserController {
     this.routes.route(this.changePwdPath)
       .all(this.authenticationMid.checkAuthentication)
       .put(this.changePassword)
+
+    this.routes.route(this.changeMyUserData)
+      .all(this.authenticationMid.checkAuthentication)
+      .put(this.updateMyUser)
 
     this.routes.route(this.resetPwdPath)
       .all(this.authenticationMid.checkAuthentication)
