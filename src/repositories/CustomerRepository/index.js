@@ -8,7 +8,14 @@ class CustomerRepository {
 
   async list(raw = false){
     return await Customers.findAll({
-      include: ['user', 'status'],
+      include: [
+        {
+          association: "user",
+          attributes: ["id", "fullName", "username", "managerId"]
+        }, {
+          association: "status",
+          attributes: ["id", "name", "key"]
+        }],
       raw
     })
   }

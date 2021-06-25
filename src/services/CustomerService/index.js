@@ -77,7 +77,7 @@ class CustomerService extends Service {
     this._checkStatusesProvided(statusesProvided, validStatuses)
 
     const customers = await this._customerRepository.list()
-
+    
     return customers.filter(customer => statusesProvided.includes(customer.status.key))
   }
 
