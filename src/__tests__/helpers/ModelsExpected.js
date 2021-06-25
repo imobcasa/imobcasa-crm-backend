@@ -49,7 +49,7 @@ class ModelsExpected {
       origin: expect.any(String),
       productInterest: expect.any(String),
       regionInterest: expect.any(String),
-      biddersQuatity: expect.any(Number),
+      biddersQuantity: expect.any(Number),
       userId: expect.any(String),
       statusId: expect.any(String),
       createdAt: expect.any(Date),

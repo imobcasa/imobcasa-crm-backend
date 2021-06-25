@@ -32,7 +32,7 @@ class CustomerRepository {
     origin,
     productInterest,
     regionInterest,
-    biddersQuatity,
+    biddersQuantity,
     userId,   
     statusId
   }){
@@ -47,7 +47,7 @@ class CustomerRepository {
       origin,
       productInterest,
       regionInterest,
-      biddersQuatity,
+      biddersQuantity,
       userId,   
       statusId
     }, {
@@ -62,7 +62,15 @@ class CustomerRepository {
         id: fields.id
       },
       raw,
-      include: ['status', 'user']
+      include: [
+        {
+          association: "user",
+          attributes: ["id", "fullName", "username", "managerId"]
+        }, {
+          association: "status",
+          attributes: ["id", "name", "key"]
+        }
+      ]
     })
   }
 
@@ -77,7 +85,7 @@ class CustomerRepository {
     customer.origin = fields.origin
     customer.productInterest = fields.productInterest
     customer.regionInterest = fields.regionInterest
-    customer.biddersQuatity = fields.biddersQuatity
+    customer.biddersQuantity = fields.biddersQuantity
     customer.userId = fields.userId
 
     return await customer.save()

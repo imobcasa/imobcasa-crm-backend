@@ -16,7 +16,7 @@ class CustomerService extends Service {
     "origin",
     "productInterest",
     "regionInterest",
-    "biddersQuatity",
+    "biddersQuantity",
     "userId"
   ]
   __getOneRequiuredFields = ['x-customer-id', 'reqUserId', 'admin']
@@ -32,7 +32,7 @@ class CustomerService extends Service {
     "origin",
     "productInterest",
     "regionInterest",
-    "biddersQuatity",
+    "biddersQuantity",
     "userId",
     "reqUserId",
     "admin",
@@ -105,7 +105,7 @@ class CustomerService extends Service {
       origin,
       productInterest,
       regionInterest,
-      biddersQuatity,
+      biddersQuantity,
       userId,   
     } = fields
 
@@ -120,7 +120,7 @@ class CustomerService extends Service {
       origin,
       productInterest,
       regionInterest,
-      biddersQuatity,
+      biddersQuantity,
       userId,   
       statusId: status.id
     })
@@ -168,7 +168,7 @@ class CustomerService extends Service {
       origin,
       productInterest,
       regionInterest,
-      biddersQuatity,
+      biddersQuantity,
       userId
     } = fields
 
@@ -183,7 +183,7 @@ class CustomerService extends Service {
       origin,
       productInterest,
       regionInterest,
-      biddersQuatity,
+      biddersQuantity,
       userId
     } )
   }

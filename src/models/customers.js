@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     origin: DataTypes.STRING,
     productInterest: DataTypes.STRING,
     regionInterest: DataTypes.STRING,
-    biddersQuatity: DataTypes.NUMBER,
+    biddersQuantity: DataTypes.NUMBER,
     userId: DataTypes.UUID,
     statusId: DataTypes.UUID
   }, {

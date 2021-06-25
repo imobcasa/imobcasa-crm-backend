@@ -94,7 +94,7 @@ class Mocks {
       origin: "Facebook",
       productInterest: "Tatuapé",
       regionInterest: "Leste",
-      biddersQuatity: 1,
+      biddersQuantity: 1,
       userId,
       statusId
     }

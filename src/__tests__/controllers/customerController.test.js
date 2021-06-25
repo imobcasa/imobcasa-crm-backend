@@ -139,7 +139,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       "origin",
       "productInterest",
       "regionInterest",
-      "biddersQuatity",
+      "biddersQuantity",
       "userId"
     ]
 
@@ -304,7 +304,7 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       "origin",
       "productInterest",
       "regionInterest",
-      "biddersQuatity",
+      "biddersQuantity",
       "userId"
     ]
 

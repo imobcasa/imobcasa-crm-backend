@@ -37,7 +37,7 @@ module.exports = {
       regionInterest: {
         type: Sequelize.STRING
       },
-      biddersQuatity: {
+      biddersQuantity: {
         type: Sequelize.NUMBER
       },
       userId: {
