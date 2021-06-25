@@ -115,10 +115,14 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       await customerController._list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).not.toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
-        statusId: customerStatus2.id
+        status: expect.objectContaining({
+          id: customerStatus2.id
+        })
       })]))
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
-        statusId: customerStatus.id
+        status: expect.objectContaining({
+          id: customerStatus.id
+        })
       })]))
     })
   })

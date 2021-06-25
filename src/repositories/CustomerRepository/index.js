@@ -16,7 +16,8 @@ class CustomerRepository {
           association: "status",
           attributes: ["id", "name", "key"]
         }],
-      raw
+      raw,
+      attributes: ["id", "fullName", "phone"]
     })
   }
 
