@@ -28,6 +28,7 @@ class CustomerRepository {
     phone,
     birthDate,
     incomes,
+    fgts,
     startDate,
     origin,
     productInterest,
@@ -43,6 +44,7 @@ class CustomerRepository {
       phone,
       birthDate,
       incomes,
+      fgts,
       startDate,
       origin,
       productInterest,
@@ -81,6 +83,7 @@ class CustomerRepository {
     customer.phone = fields.phone
     customer.birthDate = fields.birthDate
     customer.incomes = fields.incomes
+    customer.fgts = fields.fgts
     customer.startDate = fields.startDate
     customer.origin = fields.origin
     customer.productInterest = fields.productInterest

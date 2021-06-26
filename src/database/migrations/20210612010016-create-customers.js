@@ -25,6 +25,9 @@ module.exports = {
       incomes: {
         type: Sequelize.NUMBER
       },
+      fgts: {
+        type: Sequelize.NUMBER
+      },
       startDate: {
         type: Sequelize.DATE
       },
