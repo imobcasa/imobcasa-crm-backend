@@ -81,7 +81,6 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
   describe("1 - CREATE tests", () => {
 
     const requiredFields = [
-      "typeId",
       "customerId"
     ]
     let testPos = 1
@@ -181,27 +180,7 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it(`1.6 Should return 400 if invalid typeId has been provided`, async () => {
-      const body = {
-        customerId: customer.id,
-        typeId: "IVNALIDID"
-      }
-      const file = {
-        originalname: 'wp4676582.jpg',
-        path: 'C:\\Users\\Heron Eto\\Documents\\GitHub\\imobcasa-crm-backend\\tmp\\uploads\\d0eee3427fd69c5d9b89cda4bc573d8a-wp4676582.jpg',
-        size: 459621 ,
-      }
-     
-      const req = mocks.mockReq(body, null, null, null, null, file)
-      const res = mocks.mockRes()
-      await documentsController.create(req, res)
-      const { error } = invalidParamError("typeId")
-      expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.json).toHaveBeenCalledWith(error)
-    })
-
-
-    it(`1.7 Should return 200 if document was created`, async () => {
+    it(`1.6 Should return 200 if document was created`, async () => {
       const body = {
         customerId: customer.id,
         typeId: documentType.id

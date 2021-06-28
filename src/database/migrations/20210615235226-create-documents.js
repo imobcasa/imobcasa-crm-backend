@@ -19,7 +19,7 @@ module.exports = {
           model: "documentTypes",
           key: "id"
         },
-        allowNull: false
+        allowNull: true
       },
       statusId: {
         type: Sequelize.UUID,

@@ -12,7 +12,6 @@ class DocumentService extends Service {
   _createRequiredFields = [
     "originalname",
     "path",
-    "typeId",
     "size",
     "customerId"
   ]
@@ -164,31 +163,15 @@ class DocumentService extends Service {
       "customerId"
     )
 
-    this._checkEntityExsits(
-      await this._documentTypesRepository.getOne({ id: typeId }),
-      "typeId"
-    )
-
     const status = await this._documentStatusesRepository.getFirstStatus()
         
-    const document = await this._documentsRepository.create({
+    return await this._documentsRepository.create({
       name,
       url,
-      typeId,
       statusId: status.id,
       size,
       customerId
     })
-
-    
-    if(await this._checkCustomerRequiredDocuments(customerId)){
-      await this._checkCustomerDocumentsStatuses(status.key, customerId)
-    }else {
-      await this._updateCustomerStatusByStatusKey(customerId, "DOC_PENDING")
-    }
-
-    return document
-
   }
 
   async listByCustomer(fields){

@@ -6,7 +6,6 @@ class DocumentsRepository {
   async create({
     name,
     url,
-    typeId,
     statusId,
     size,
     customerId
@@ -14,7 +13,6 @@ class DocumentsRepository {
     return await Documents.create({
       name,
       url,
-      typeId,
       statusId,
       size,
       customerId
