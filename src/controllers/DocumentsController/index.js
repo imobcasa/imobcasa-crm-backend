@@ -29,7 +29,11 @@ class DocumentsController {
 
     this.routes.post(
       this.basePath,
-      this.fileUploadMid.catchFile().single("file"),
+      (req, res, next) => {
+        req.socket.setTimeout(4000)
+        next()
+      },     
+      this.fileUploadMid.catchFile().single("file"),      
       this.authenticationMid.checkAuthentication,
       this.create)
 
@@ -68,7 +72,7 @@ class DocumentsController {
   }
 
   async create(req, res) {
-    try {
+    try {      
       const documentService = new DocumentService()
       const data = await documentService.create({
         ...req.body,

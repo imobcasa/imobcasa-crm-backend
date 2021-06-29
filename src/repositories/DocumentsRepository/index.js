@@ -27,7 +27,15 @@ class DocumentsRepository {
       where: {
         customerId
       },
-      include: ['status', 'type']
+      include: [
+        {
+          association: "type",
+          attributes: ["id", "key", "name", "providedByCustomer"]
+        }, {
+          association: "status",
+          attributes: ["id", "name", "key", "order"]
+        }
+      ]
     })
   }
 

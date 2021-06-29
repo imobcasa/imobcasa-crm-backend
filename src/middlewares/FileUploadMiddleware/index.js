@@ -6,7 +6,7 @@ const multerConfig = require("../../implementations/fileUpload");
 class FileUploadMiddleware {
 
 
-  catchFile(){
+  catchFile(){   
     return multer(multerConfig)
   }
 

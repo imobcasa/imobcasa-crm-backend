@@ -11,7 +11,6 @@ class DocumentService extends Service {
 
   _createRequiredFields = [
     "originalname",
-    "path",
     "size",
     "customerId"
   ]
@@ -32,7 +31,6 @@ class DocumentService extends Service {
 
   _changeFileRequiredFields = [
     "originalname",
-    "path",
     "size",
     "x-file-id"
   ]
@@ -148,15 +146,17 @@ class DocumentService extends Service {
 
 
   async create(fields){ 
+    console.log(fields)
     this._checkRequiredFields(this._createRequiredFields, fields)
     
     const  {
       originalname : name,
-      path : url,
-      typeId,
       size,
       customerId
     } = fields    
+
+    const storage = process.env.NODE_ENV === "test" ? "local" : storageTypes[process.env.STORAGE_TYPE]
+    const url = storage === "s3" ? fields.location : fields.path
 
     this._checkEntityExsits(
       await this._customerRepository.getOne({ id: customerId }),
@@ -229,9 +229,12 @@ class DocumentService extends Service {
 
     const {
       originalname: name,
-      path: url,
       size,      
     } = fields
+
+    const storage = process.env.NODE_ENV === "test" ? "local" : storageTypes[process.env.STORAGE_TYPE]
+    const url = storage === "s3" ? fields.location : fields.path
+
 
     const result = await this._documentsRepository.updateFile({
       name,

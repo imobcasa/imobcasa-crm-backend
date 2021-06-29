@@ -143,25 +143,8 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    it(`1.4 Should return 400 if no path has been provided`, async () => {
-      const body = {
-        customerId: customer.id,
-        typeId: documentType.id
-      }
-      const file = {
-        originalname: 'wp4676582.jpg',
-        size: 459621 ,
-      }
-     
-      const req = mocks.mockReq(body, null, null, null, null, file)
-      const res = mocks.mockRes()
-      await documentsController.create(req, res)
-      const { error } = missingParamError("path")
-      expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.json).toHaveBeenCalledWith(error)
-    })
 
-    it(`1.5 Should return 400 if invalid customerId has been provided`, async () => {
+    it(`1.4 Should return 400 if invalid customerId has been provided`, async () => {
       const body = {
         customerId: "INVALID ID",
         typeId: documentType.id
@@ -180,7 +163,7 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it(`1.6 Should return 200 if document was created`, async () => {
+    it.only(`1.5 Should return 200 if document was created`, async () => {
       const body = {
         customerId: customer.id,
         typeId: documentType.id
@@ -356,21 +339,6 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
       const res = mocks.mockRes()
       await documentsController.changeFile(req, res)
       const { error } = missingParamError("size")
-      expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.json).toHaveBeenCalledWith(error)
-    })
-    it(`4.4 Should return 400 if no path has been provided`, async () => {
-      const file = {
-        originalname: 'wp4676582.jpg',
-        size: 459621 ,
-      }
-     
-      const req = mocks.mockReq(null, null, null, null, {
-        'x-file-id': document.id
-      }, file)
-      const res = mocks.mockRes()
-      await documentsController.changeFile(req, res)
-      const { error } = missingParamError("path")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
