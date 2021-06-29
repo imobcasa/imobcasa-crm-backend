@@ -11,6 +11,7 @@ const ServiceException = require('../../helpers/Exceptions/ServiceException')
 class SalesController {
   routes = Router()
   basePath = "/sales"
+  usersAvailablePath = "/sales/users"
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -25,7 +26,10 @@ class SalesController {
       .post(this.createSale)
       .put(this.updateSale)
       .delete(this.deleteSale)
-
+    
+    this.routes.route(this.usersAvailablePath)
+      .all(this.authenticationMid.checkAuthentication)
+      .get(this.getUsersAvailable)
   }
 
   async getSale(req, res) {
@@ -102,8 +106,24 @@ class SalesController {
       }
     }
   }
-
-
+  async getUsersAvailable(req, res){
+    try {
+      const salesService = new SalesService()
+      const data = await salesService.getUsersAvailable()
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+  
   
 }
 

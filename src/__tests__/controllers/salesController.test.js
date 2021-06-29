@@ -310,5 +310,20 @@ describe("SALES Controller Tests", () => {
     })
   })
 
+  describe("5 - getUsersAvailable tests", () => {
+    it('5.1 - Should return 200 with array of seller users', async () => {
+      const req = mocks.mockReq()
+      const res = mocks.mockRes()
+      await salesController.getUsersAvailable(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({
+          fullName: expect.any(String),
+          id: expect.any(String)
+        })
+      ]))
+    })
+  })
+
 
 })

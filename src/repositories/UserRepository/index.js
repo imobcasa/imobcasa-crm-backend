@@ -93,6 +93,16 @@ class UserRepository {
     return await user.save()
   } 
 
+  async usersForSales(profileId){
+    return await Users.findAll({
+      where: {
+        profileId
+      },
+      attributes: {
+        exclude: ['email', 'phone', 'profileId', 'createdAt', 'updatedAt', 'password', 'managerId', 'username']
+      }
+    })
+  }
   
   
 }

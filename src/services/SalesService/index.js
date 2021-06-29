@@ -1,6 +1,5 @@
 const Service = require('../Service')
-const { SalesRepository, UsersSalesRepository, CustomerRepository, UserRepository } = require('../../repositories')
-const { SearchSource } = require('@jest/core')
+const { SalesRepository, UsersSalesRepository, CustomerRepository, UserRepository, ProfilesRepository } = require('../../repositories')
 
 class UserService extends Service {
   _getOneRequiredFields = ["x-customer-id", "reqUserId", "admin"]
@@ -30,6 +29,7 @@ class UserService extends Service {
     this._usersSalesRepository = new UsersSalesRepository()
     this._customersRespository =  new CustomerRepository()
     this._usersRepository = new UserRepository()
+    this._profilesRepository = new ProfilesRepository()
   }
 
 
@@ -69,7 +69,6 @@ class UserService extends Service {
       users
     }
   }
-
 
   async create(fields){
     this._checkRequiredFields(this._createRequiredFields, fields)
@@ -123,7 +122,6 @@ class UserService extends Service {
     return sale
   }
   
-
   async update(fields){
     this._checkRequiredFields(this._updateRequiredFields, fields)
     
@@ -187,6 +185,11 @@ class UserService extends Service {
     
 
     return await this._salesRepository.delete({ id: fields['x-sale-id']})
+  }
+
+  async getUsersAvailable(){
+    const sellerProfile = await this._profilesRepository.getSellerProfile()
+    return await this._usersRepository.usersForSales(sellerProfile.id)
   }
 
 }

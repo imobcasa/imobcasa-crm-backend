@@ -15,6 +15,14 @@ class ProfileRepository {
     })
   }
 
+  async getSellerProfile(){
+    return await Profiles.findOne({
+      where: {
+        name: 'Corretor'
+      }
+    })
+  }
+
 }
 
 
