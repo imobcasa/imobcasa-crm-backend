@@ -155,7 +155,7 @@ class DocumentService extends Service {
       customerId
     } = fields    
 
-    const storage = process.env.NODE_ENV === "test" ? "local" : storageTypes[process.env.STORAGE_TYPE]
+    const storage = process.env.NODE_ENV === "test" ? "local" : process.env.STORAGE_TYPE
     const url = storage === "s3" ? fields.location : fields.path
 
     this._checkEntityExsits(
@@ -232,7 +232,7 @@ class DocumentService extends Service {
       size,      
     } = fields
 
-    const storage = process.env.NODE_ENV === "test" ? "local" : storageTypes[process.env.STORAGE_TYPE]
+    const storage = process.env.NODE_ENV === "test" ? "local" : process.env.STORAGE_TYPE
     const url = storage === "s3" ? fields.location : fields.path
 
 
