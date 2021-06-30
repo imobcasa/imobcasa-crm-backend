@@ -32,6 +32,23 @@ class UserService extends Service {
     this._profilesRepository = new ProfilesRepository()
   }
 
+  async _getManagers(users = []){
+    const usersWithManagers = []
+    for(const user of users){
+      const userData = await this._usersRepository.getOne({ id: user.id })
+      if(userData.managerId){
+        const manager = await this._usersRepository.getOne({ id: userData.managerId })
+        user.manager = {
+          fullName: manager.fullName,
+          id: manager.id
+        }
+      }
+      usersWithManagers.push(user)
+    }
+
+    return usersWithManagers
+  }
+
 
   async getSale(fields){
     
@@ -52,9 +69,14 @@ class UserService extends Service {
       return {
         id: userSale.userId,
         fullName: userSale.user.fullName,
-        username: userSale.user.username,
+        username: userSale.user.username
       }
     })
+
+    const usersWithManagers = await this._getManagers(users)
+    console.log(usersWithManagers)
+
+
 
     return {
       id: sale.id,

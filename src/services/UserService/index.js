@@ -32,6 +32,17 @@ class UserService extends Service {
   }
 
 
+  async _getManager(user){
+    if(user.managerId){
+      const manager = await this._userRepository.getOne({ id: user.managerId })
+      user.manager = {
+        fullName: manager.fullName,
+        id: manager.id
+      }
+    }
+    return user
+  }
+
   async createUser(fields) {
     await this._checkRequiredFields(this._createRequiredFields, fields)
     const {
@@ -127,8 +138,34 @@ class UserService extends Service {
     const user = await this._userRepository.getOne({
       id: fields['x-user-id']
     })
-    await this._checkEntityExsits(user, 'x-user-id')
-    return user
+    await this._checkEntityExsits(user, 'x-user-id')    
+    if(!user.managerId){
+      return user
+    }
+    const userWithManager = await this._getManager(user)
+    return {
+      id: userWithManager.id,
+      fullName: userWithManager.fullName,
+      username: userWithManager.username,
+      email: userWithManager.email,
+      phone: userWithManager.phone,
+      profileId: userWithManager.profileId,
+      managerId: userWithManager.managerId,
+      createdAt: userWithManager.createdAt,
+      updatedAt: userWithManager.updatedAt,
+      profile: {
+        id: userWithManager.profile.id,
+        name: userWithManager.profile.name,
+        admin: userWithManager.profile.admin,
+        teamManager: userWithManager.profile.teamManager,
+        createdAt: userWithManager.profile.createdAt,
+        updatedAt: userWithManager.profile.updatedAt,
+      },
+      manager: {
+        fullName: userWithManager.manager.fullName,
+        id: userWithManager.manager.id,
+      }
+    }
   }
 
   async changePassword(fields){
