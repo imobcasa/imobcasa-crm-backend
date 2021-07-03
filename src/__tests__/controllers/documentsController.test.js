@@ -163,7 +163,7 @@ describe("DOCUMENTS CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it.only(`1.5 Should return 200 if document was created`, async () => {
+    it(`1.5 Should return 200 if document was created`, async () => {
       const body = {
         customerId: customer.id,
         typeId: documentType.id

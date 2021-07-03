@@ -146,7 +146,6 @@ class DocumentService extends Service {
 
 
   async create(fields){ 
-    console.log(fields)
     this._checkRequiredFields(this._createRequiredFields, fields)
     
     const  {

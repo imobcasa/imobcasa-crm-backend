@@ -107,7 +107,12 @@ describe("CUSTOMER CONTROLLER Tests", () => {
     it('1.5 - Should return 200 and list of customers only x-status provided', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
-        admin: true
+        admin: true,
+        profile: {
+          admin: profile.admin,
+          teamManager: profile.teamManager,
+          name: profile.name
+        }
       }, {
         'x-status': 'DOC_PENDING'
       })
@@ -250,7 +255,12 @@ describe("CUSTOMER CONTROLLER Tests", () => {
     it('3.5 - Should return 401 if requserId provided is not equal of customer userId', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user2.id,
-        admin: false
+        admin: false,
+        profile: {
+          teamManager: profile2.teamManager,
+          name: profile2.name,
+          admin: profile2.admin
+        }
       }, {
         'x-customer-id': customer.id
       })
@@ -264,7 +274,12 @@ describe("CUSTOMER CONTROLLER Tests", () => {
     it('3.6 - Should return 200', async () => {
       const req = mocks.mockReq(null, null, null, {
         reqUserId: user.id,
-        admin: true
+        admin: true,
+        profile: {
+          teamManager: profile.teamManager,
+          name: profile.name,
+          admin: profile.admin
+        }
       }, {
         'x-customer-id': customer.id
       })
@@ -333,7 +348,12 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       body.phone = "11098765432"
       const req = mocks.mockReq(body, null, null, {
         reqUserId: user.id,
-        admin: false
+        admin: false,
+        profile: {
+          teamManager: profile.teamManager,
+          name: profile.name,
+          admin: profile.admin
+        }
       }, {
         'x-customer-id': "INVALID"
       })
@@ -346,12 +366,17 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    it('4.3 - Should return 403 if reqUserId is not equal of userId of customer finded', async () => {
+    it('4.3.1 - Should return 403 if reqUserId is not equal of userId of customer finded', async () => {
       const body = mocks.mockCustomer(mocks.mockCustomer(user.id, customerStatus.id))
       body.phone = "11098765432"
       const req = mocks.mockReq(body, null, null, {
         reqUserId: user2.id,
-        admin: false
+        admin: false,
+        profile: {
+          teamManager: profile2.teamManager,
+          name: profile2.name,
+          admin: profile2.admin
+        }
       }, {
         'x-customer-id': customer.id
       })
@@ -369,7 +394,12 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       body.phone = "11098765432"
       const req = mocks.mockReq(body, null, null, {
         reqUserId: user2.id,
-        admin: true
+        admin: true,
+        profile: {
+          teamManager: profile.teamManager,
+          name: profile.name,
+          admin: profile.admin
+        }
       }, {
         'x-customer-id': customer.id
       })
@@ -388,7 +418,12 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       const body = mocks.mockCustomer(user.id, customerStatus.id)
       const req = mocks.mockReq(body, null, null, {
         reqUserId: user.id,
-        admin: true
+        admin: true,
+        profile: {
+          teamManager: profile.teamManager,
+          name: profile.name,
+          admin: profile.admin
+        }
       }, {
         'x-customer-id': customer.id
       })
@@ -406,7 +441,12 @@ describe("CUSTOMER CONTROLLER Tests", () => {
       body.phone = "11098765434"
       const req = mocks.mockReq(body, null, null, {
         reqUserId: user.id,
-        admin: true
+        admin: true,
+        profile: {
+          teamManager: profile.teamManager,
+          name: profile.name,
+          admin: profile.admin
+        }
       }, {
         'x-customer-id': customer.id
       })

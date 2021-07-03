@@ -74,7 +74,6 @@ class UserService extends Service {
     })
 
     const usersWithManagers = await this._getManagers(users)
-    console.log(usersWithManagers)
 
 
 

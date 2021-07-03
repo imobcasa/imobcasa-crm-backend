@@ -22,7 +22,6 @@ class CustomerStatusesController {
   async _load() {
     this.routes.route(this.basePath)
       .all(this.authenticationMid.checkAuthentication)
-      .all(this.authorizationMid.checkAdminPrivileges)
       .get(this.listAll)
 
   }

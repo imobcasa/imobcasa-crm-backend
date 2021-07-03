@@ -55,13 +55,34 @@ class CustomerService extends Service {
     }
   }
 
-  _checkUserAccessToCustomer(userId, customerUserId, admin){
+  _checkUserAccessToCustomer(userId, customer, admin, teamManager){
     if(!admin){
-      if(userId !== customerUserId){
+      if(teamManager){
+        if(userId !== customer.user.managerId){
+          this._throwForbidenError()
+        }
+        return true
+      }
+      if(userId !== customer.user.id){
         this._throwForbidenError()
       }
-    }
-    
+    }    
+  }
+
+  async _filterUserAccessToCustomer(customers = [], admin, userId, teamManager ){
+    const filteredUsers = customers.filter(customer => {
+      if(admin){
+        return customer
+      }     
+
+      if(teamManager){
+        return customer.user.managerId === userId ? customer : null
+      }
+
+      return customer.user.id === userId ? customer : null
+    })
+
+    return filteredUsers
   }
 
 
@@ -78,7 +99,14 @@ class CustomerService extends Service {
 
     const customers = await this._customerRepository.list()
     
-    return customers.filter(customer => statusesProvided.includes(customer.status.key))
+
+    return this._filterUserAccessToCustomer(
+        customers.filter(customer => statusesProvided.includes(customer.status.key)
+      ), 
+      fields.profile.admin || fields.profile.name.toUpperCase() === "FINANCEIRO" || fields.profile.name.toUpperCase() === "DOCUMENTISTA", 
+      fields.reqUserId, 
+      fields.profile.teamManager
+    )
   }
 
   async create(fields) {
@@ -135,7 +163,11 @@ class CustomerService extends Service {
     const customer = await this._customerRepository.getOne({ id: fields['x-customer-id']})
     this._checkEntityExsits(customer, 'x-customer-id')
 
-    this._checkUserAccessToCustomer(fields.reqUserId, customer.userId, fields.admin)
+    this._checkUserAccessToCustomer(
+      fields.reqUserId, 
+      customer, 
+      fields.admin || fields.profile.name.toUpperCase() === "FINANCEIRO" || fields.profile.name.toUpperCase() === "DOCUMENTISTA", 
+      fields.profile.teamManager)
 
     delete customer.user.password
 
@@ -151,7 +183,7 @@ class CustomerService extends Service {
     })
     this._checkEntityExsits(customer, 'x-customer-id')
 
-    this._checkUserAccessToCustomer(fields.reqUserId, customer.userId, fields.admin)
+    this._checkUserAccessToCustomer(fields.reqUserId, customer, fields.admin, fields.profile.teamManager)
 
     const customerSamePhone = await this._customerRepository.getByPhone(fields.phone, true)
     if(customer.id !== customerSamePhone?.id){

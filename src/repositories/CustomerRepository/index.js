@@ -116,7 +116,7 @@ class CustomerRepository {
         id: customerId
       }
     })
-  }
+  }  
 
 }
 

@@ -13,7 +13,8 @@ class AuthenticationMiddleware {
       const tokenDecoded = await loginService.checkAuthentication(req.headers)
       req.locals = {
         reqUserId: tokenDecoded.id,
-        admin: tokenDecoded.admin
+        admin: tokenDecoded.profile.admin,
+        profile: tokenDecoded.profile
       }
       next()
     }catch(err){

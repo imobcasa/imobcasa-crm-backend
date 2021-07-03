@@ -35,7 +35,11 @@ class LoginService extends Service {
       where: {
         username: fields.username
       },
-      include: ['profile'],
+      include: [
+        {
+          association: "profile",
+          attributes: ["name", "admin", "teamManager"]
+        }],
     })
 
     await this._checkUserEntityExsits(user, "Username or Password")
@@ -43,8 +47,8 @@ class LoginService extends Service {
 
     
 
-    const accessToken = await this._jwtImplementation.generateAccessToken(user.id, user.profile.admin)
-    const refreshToken = await this._jwtImplementation.generateRefreshToken(user.id, user.profile.admin)
+    const accessToken = await this._jwtImplementation.generateAccessToken(user.id, user.profile)
+    const refreshToken = await this._jwtImplementation.generateRefreshToken(user.id, user.profile)
     return {
       id: user.id,
       fullName: user.fullName,
