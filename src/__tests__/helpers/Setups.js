@@ -20,16 +20,16 @@ class Setup {
     return await Profiles.create(mocks.mockProfile(name, admin, teamManager), { raw })
   }
 
-  async generateUser(username = "mockedUser", profileId, managerId, raw = false) {
-    return await Users.create(mocks.mockUser(username, profileId, managerId), { raw })
+  async generateUser(username = "mockedUser", profileId, managerId, raw = false, fullName) {
+    return await Users.create(mocks.mockUser(username, profileId, managerId, fullName), { raw })
   }
 
   async generateCustomerStatus(name, order, key, raw = false) {
     return await CustomerStatuses.create(mocks.mockCustomerStatus(name, order, key), { raw })
   }
 
-  async generateCustomer(userId, customerStatusId, raw = false) {
-    return await Customers.create(mocks.mockCustomer(userId, customerStatusId), { raw })
+  async generateCustomer(userId, customerStatusId, raw = false, fullName) {
+    return await Customers.create(mocks.mockCustomer(userId, customerStatusId, "11912341234", fullName), { raw })
   }
 
   async generateDocumentType(

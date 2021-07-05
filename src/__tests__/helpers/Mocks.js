@@ -33,11 +33,12 @@ class Mocks {
   mockUser(
     username = "mockedUser",
     profileId = "",
-    managerId = ""
+    managerId = "",
+    fullName = "ValidFullName"
   ) {
     return {
       username,
-      fullName: "ValidFullName",
+      fullName,
       email: "valid@email.com",
       phone: '11912341234',
       password: "validPassword",
@@ -82,9 +83,9 @@ class Mocks {
   }
 
 
-  mockCustomer(userId = "", statusId = "", phone = "11912341234") {
+  mockCustomer(userId = "", statusId = "", phone = "11912341234", fullName = "CustomerFullName") {
     return {
-      fullName: "Customer Full Name",
+      fullName,
       cpf: "00000000000",
       email: "customer@email.com",
       phone,

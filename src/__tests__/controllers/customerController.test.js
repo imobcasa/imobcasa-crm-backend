@@ -24,14 +24,14 @@ describe("CUSTOMER CONTROLLER Tests", () => {
     try {
       await setupTests.databaseSetup()
       profile = await setupTests.generateProfile("Administrador", true, false)
-      user = await setupTests.generateUser("mockedUser", profile.id)
+      user = await setupTests.generateUser("mockedUser", profile.id, null, false)
 
       profile2 = await setupTests.generateProfile("Corretor", false, false)
-      user2 = await setupTests.generateUser("mockedUser", profile2.id)
+      user2 = await setupTests.generateUser("mockedUser", profile2.id, null, false)
       customerStatus = await setupTests.generateCustomerStatus("Pendente de Documentação", 1, "DOC_PENDING")
-      customer = await setupTests.generateCustomer(user.id, customerStatus.id)
+      customer = await setupTests.generateCustomer(user.id, customerStatus.id, false, 'joao')
       customerStatus2 = await setupTests.generateCustomerStatus("Documentação em análise", 2, "DOC_ANALISIS")
-      customer2 = await setupTests.generateCustomer(user.id, customerStatus2.id)
+      customer2 = await setupTests.generateCustomer(user.id, customerStatus2.id, false, 'maria')
     } catch (err) {
       console.log(err)
     }
@@ -128,7 +128,31 @@ describe("CUSTOMER CONTROLLER Tests", () => {
         status: expect.objectContaining({
           id: customerStatus.id
         })
+      })]))      
+    })
+
+    it('1.6 - Should return 200 and list of customers only x-query provided', async () => {
+      const req = mocks.mockReq(null, null, null, {
+        reqUserId: user.id,
+        admin: true,
+        profile: {
+          admin: profile.admin,
+          teamManager: profile.teamManager,
+          name: profile.name
+        }
+      }, {
+        'x-status': 'DOC_PENDING,DOC_ANALISIS',
+        'x-query': 'joao'
+      })
+      const res = mocks.mockRes()
+      await customerController._list(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).not.toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+       fullName: 'maria'
       })]))
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        fullName: 'joao'
+      })]))      
     })
   })
 
