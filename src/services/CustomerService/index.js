@@ -97,7 +97,7 @@ class CustomerService extends Service {
     const statusesProvided = fields['x-status'].split(',')
     this._checkStatusesProvided(statusesProvided, validStatuses)
 
-    const customers = await this._customerRepository.list()
+    const customers = await this._customerRepository.list(false, fields['x-query'])
     
 
     return this._filterUserAccessToCustomer(

@@ -39,6 +39,7 @@ class CustomerController {
       const customerService = new CustomerService()
       const data = await customerService.list({
         'x-status': req.headers['x-status'],
+        'x-query': req.headers['x-query'],
         ...req.locals
       })
       return res.status(200).json(data)

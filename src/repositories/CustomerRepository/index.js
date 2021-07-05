@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const { Customers } = require('../../models')
 
 
@@ -6,8 +7,13 @@ const { Customers } = require('../../models')
 
 class CustomerRepository {
 
-  async list(raw = false){
+  async list(raw = false, fullNameQuery = ""){
     return await Customers.findAll({
+      where: {
+        fullName: {
+          [Op.like]: `%${fullNameQuery}%`
+        }
+      },
       include: [
         {
           association: "user",
