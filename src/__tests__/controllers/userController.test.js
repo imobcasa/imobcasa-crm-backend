@@ -21,12 +21,11 @@ describe('USER CONTROLLER: tests', () => {
     try {
       await setupTests.databaseSetup()
       profile = await setupTests.generateProfile("Administrador", true, false)
-      user = await setupTests.generateUser("Administrador", profile.id, null, true)
+      user = await setupTests.generateUser("Administrador", profile.id, null, true, "Administrador")
       token = await mocks.mockJwtToken(user.id)
 
       profile2 = await setupTests.generateProfile("Corretor", true, false)
-      user2 = await setupTests.generateUser("user2", profile2.id)
-
+      user2 = await setupTests.generateUser("user2", profile2.id, null, true, "Corretor")
     } catch (err) {
       console.log(err)
     }
@@ -41,7 +40,7 @@ describe('USER CONTROLLER: tests', () => {
     }
   })
 
-  describe("LIST User tests", () => {
+  describe.only("LIST User tests", () => {
     it("Should return 400 if no x-profile Header has been provided", async () => {
       const req = mocks.mockReq(null, null, null, null, {
         'Authorization': 'Bearer ' + token
@@ -80,6 +79,29 @@ describe('USER CONTROLLER: tests', () => {
         username: user.username,
         profileId: user.profileId
       })]))
+
+      
+    })
+
+    it("Should return 200 if x-query has been provided", async () => {
+      const req = mocks.mockReq(null, null, null, null, {
+        'Authorization': 'Bearer ' + token,
+        'x-profiles': [profile.name.toUpperCase(), profile2.name.toUpperCase()],
+        'x-query': 'Admin'
+
+      })
+      const res = mocks.mockRes()
+      await userController._list(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        fullName: 'Administrador'
+      })]))
+      expect(res.json).not.toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        fullName: 'Corretor'
+      })]))
+
+      
     })
   })
 
