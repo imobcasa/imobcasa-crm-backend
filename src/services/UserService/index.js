@@ -83,7 +83,7 @@ class UserService extends Service {
     await this._checkRequiredFields(this._listRequiredFields, fields)
     await this._checkFieldExists(fields['x-profiles'], 'x-profiles')
 
-    const users =  await this._userRepository.list()
+    const users =  await this._userRepository.list(fields['x-query'])
 
 
     return users.filter(user => fields['x-profiles'].includes(user.profile.name.toUpperCase()))

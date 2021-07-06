@@ -15,8 +15,13 @@ class UserRepository {
     return user
   }
   
-  async list(){
+  async list(fullNameQuery = ""){
     return await Users.findAll({
+      where: {
+        fullName: {
+          [Op.like]: `%${fullNameQuery}%`
+        }
+      },
       attributes: {
         exclude: ['password']
       },
