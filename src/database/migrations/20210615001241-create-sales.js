@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       value: {
-        type: Sequelize.NUMBER
+        type: Sequelize.REAL
       },
       observations: {
         type: Sequelize.STRING
