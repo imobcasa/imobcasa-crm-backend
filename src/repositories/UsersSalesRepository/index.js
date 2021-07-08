@@ -27,10 +27,10 @@ class UsersSalesRepository {
     })
   }
 
-  async update(
+  async update({
     id,
     userId
-  ) {
+  }) {
     return await UsersSales.update({
       userId
     }, {
@@ -39,16 +39,30 @@ class UsersSalesRepository {
       }
     })
   }
-  
-  async getUserSaleBySaleAndUserId({ saleId, userId }){
-    return await UsersSales.findOne({
+
+  async destroyBySaleId({
+    saleId
+  }) {
+    return await UsersSales.destroy({
       where: {
         saleId: saleId,
-        userId: userId
-      },
+      }
     })
   }
 
+ 
+
+  async findUsersSalesIdsBySaleId({ saleId }){
+    return await UsersSales.findAll({
+      where: {
+        saleId: saleId
+      },
+      attributes: ['id'],
+      raw: true      
+    })
+  }
+
+  
   async delete({
     id
   }){

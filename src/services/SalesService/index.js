@@ -1,10 +1,17 @@
 const Service = require('../Service')
-const { SalesRepository, UsersSalesRepository, CustomerRepository, UserRepository, ProfilesRepository } = require('../../repositories')
+const { 
+  SalesRepository,
+  UsersSalesRepository,
+  CustomerRepository,
+  UserRepository,
+  ProfilesRepository,
+  CustomerStatusesRepository,
+ } = require('../../repositories')
 
 class UserService extends Service {
   _getOneRequiredFields = ["x-customer-id", "reqUserId", "admin"]
   _deleteRequiredFields = ["x-sale-id"]
-  _createRequiredFields = [ 
+  _createRequiredFields = [
     "customerId",
     "projectName",
     "unityName",
@@ -12,8 +19,8 @@ class UserService extends Service {
     "value",
     "observations",
     "usersIds"
-   ]
-   _updateRequiredFields = [ 
+  ]
+  _updateRequiredFields = [
     "projectName",
     "unityName",
     "tower",
@@ -21,22 +28,24 @@ class UserService extends Service {
     "observations",
     "usersIds",
     "id"
-   ]
+  ]
 
-  constructor(){
+  constructor() {
     super()
     this._salesRepository = new SalesRepository()
     this._usersSalesRepository = new UsersSalesRepository()
-    this._customersRespository =  new CustomerRepository()
+    this._customersRespository = new CustomerRepository()
     this._usersRepository = new UserRepository()
     this._profilesRepository = new ProfilesRepository()
+    this._customerStatusesRepository = new CustomerStatusesRepository()
+
   }
 
-  async _getManagers(users = []){
+  async _getManagers(users = []) {
     const usersWithManagers = []
-    for(const user of users){
+    for (const user of users) {
       const userData = await this._usersRepository.getOne({ id: user.id })
-      if(userData.managerId){
+      if (userData.managerId) {
         const manager = await this._usersRepository.getOne({ id: userData.managerId })
         user.manager = {
           fullName: manager.fullName,
@@ -49,22 +58,32 @@ class UserService extends Service {
     return usersWithManagers
   }
 
+  async _updateCustomerStatusByStatusKey(customerId, statusKey){
+    const customerNewStatus = await this._customerStatusesRepository.getStatusByKey(statusKey)
+    if(customerNewStatus){
+      return await this._customersRespository.updateStatus({ 
+        statusId: customerNewStatus.id,
+        customerId: customerId
+      })
+    }    
+  }
 
-  async getSale(fields){
-    
+
+  async getSale(fields) {
+
     this._checkRequiredFields(this._getOneRequiredFields, fields)
 
     const customerId = fields['x-customer-id']
-    const customer = await this._customersRespository.getOne({ id: customerId})
+    const customer = await this._customersRespository.getOne({ id: customerId })
     this._checkEntityExsits(customer, 'x-customer-id')
 
-    const sale = await this._salesRepository.getSaleByCustomerId({customerId})
-    if(!sale){
+    const sale = await this._salesRepository.getSaleByCustomerId({ customerId })
+    if (!sale) {
       return {}
     }
 
-    const usersSales = await this._usersSalesRepository.getUsersSalesBySaleId({saleId: sale.id})
-    
+    const usersSales = await this._usersSalesRepository.getUsersSalesBySaleId({ saleId: sale.id })
+
     const users = usersSales.map(userSale => {
       return {
         id: userSale.userId,
@@ -91,18 +110,18 @@ class UserService extends Service {
     }
   }
 
-  async create(fields){
+  async create(fields) {
     this._checkRequiredFields(this._createRequiredFields, fields)
 
-      const {
-        customerId,
-        projectName,
-        unityName,
-        tower,
-        value,
-        observations,
-        usersIds
-      } = fields
+    const {
+      customerId,
+      projectName,
+      unityName,
+      tower,
+      value,
+      observations,
+      usersIds
+    } = fields
 
 
     const customer = await this._customersRespository.getOne({
@@ -110,7 +129,7 @@ class UserService extends Service {
     })
     this._checkEntityExsits(customer, "customerId")
 
-    for(const userId of usersIds){
+    for (const userId of usersIds) {
       const user = await this._usersRepository.getOne({
         id: userId
       })
@@ -118,7 +137,7 @@ class UserService extends Service {
     }
 
 
-    
+
 
 
 
@@ -132,7 +151,7 @@ class UserService extends Service {
     })
 
     let usersSales = []
-    for(const userId of usersIds){
+    for (const userId of usersIds) {
       const userSale = await this._usersSalesRepository.create({
         userId,
         saleId: sale.id
@@ -140,12 +159,14 @@ class UserService extends Service {
       usersSales.push(userSale)
     }
 
+    await this._updateCustomerStatusByStatusKey(customerId, "SALE_GENERATED")
+
     return sale
   }
-  
-  async update(fields){
+
+  async update(fields) {
     this._checkRequiredFields(this._updateRequiredFields, fields)
-    
+
     const {
       id,
       projectName,
@@ -156,31 +177,76 @@ class UserService extends Service {
       usersIds
     } = fields
 
-    
+
     this._checkEntityExsits(
-      await this._salesRepository.getOne({id}), 
+      await this._salesRepository.getOne({ id }),
       "id"
     )
 
-    for(const userId of usersIds){
+    for (const userId of usersIds) {
       const user = await this._usersRepository.getOne({
         id: userId
       })
       this._checkEntityExsits(user, "usersIds")
     }
 
-    
-    for(const userId of usersIds){
-      const userSaleToUpdate = await this._usersSalesRepository.getUserSaleBySaleAndUserId({
+
+
+    if (usersIds.length > 1) {
+      const usersSalesIds = await this._usersSalesRepository.findUsersSalesIdsBySaleId({
         saleId: id,
-        userId
       })
-      await this._usersSalesRepository.update({
-        id: userSaleToUpdate.id,
-        userId
-      })
+
+      if (usersSalesIds.length === 1) {
+        await this._usersSalesRepository.update({
+          id: usersSalesIds[0].id,
+          userId: usersIds[0]
+        })
+
+        await this._usersSalesRepository.create({
+          saleId: id,
+          userId: usersIds[1],
+        })
+      }
+
+      if (usersSalesIds.length > 1) {        
+        await this._usersSalesRepository.update({
+          userId: usersIds[0],
+          id: usersSalesIds[0].id
+        })
+
+        await this._usersSalesRepository.update({
+          userId: usersIds[1],
+          id: usersSalesIds[1].id
+        })
+      }
     }
-    
+
+    if (usersIds.length === 1) {
+
+      const usersSalesIds = await this._usersSalesRepository.findUsersSalesIdsBySaleId({
+        saleId: id,
+      })
+
+      if(usersSalesIds.length > 1){
+        await this._usersSalesRepository.destroyBySaleId({
+          saleId: id,
+        })
+
+        await this._usersSalesRepository.create({
+          userId: usersIds[0],
+          saleId: id
+        })
+      }
+
+      if(usersSalesIds.length === 1){
+        await this._usersSalesRepository.update({
+          id: usersSalesIds[0].id,
+          userId: usersIds[0],
+        })
+      }
+    }
+
 
     return await this._salesRepository.update({
       id,
@@ -192,23 +258,26 @@ class UserService extends Service {
     })
   }
 
-  async delete(fields){
+  async delete(fields) {
     this._checkRequiredFields(this._deleteRequiredFields, fields)
 
+    const sale = await this._salesRepository.getOne({ id: fields['x-sale-id'] })
+
     this._checkEntityExsits(
-      await this._salesRepository.getOne({ id: fields['x-sale-id'] }),
+      sale,
       'x-sale-id'
     )
 
     await this._usersSalesRepository.delete({
       id: fields['x-sale-id']
     })
-    
 
-    return await this._salesRepository.delete({ id: fields['x-sale-id']})
+    await this._updateCustomerStatusByStatusKey(sale.customerId, "DOC_APPROVED")
+
+    return await this._salesRepository.delete({ id: fields['x-sale-id'] })
   }
 
-  async getUsersAvailable(){
+  async getUsersAvailable() {
     const sellerProfile = await this._profilesRepository.getSellerProfile()
     return await this._usersRepository.usersForSales(sellerProfile.id)
   }

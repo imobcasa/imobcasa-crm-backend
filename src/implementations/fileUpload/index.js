@@ -46,9 +46,10 @@ module.exports = {
       "image/jpeg",
       "image/pjpeg",
       "image/png",
-      "image/gif",
-      "image/jpg"
+      "image/jpg",
+      "application/pdf"
     ];
+
 
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);

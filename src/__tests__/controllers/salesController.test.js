@@ -35,6 +35,8 @@ describe("SALES Controller Tests", () => {
     user2 = await setupTests.generateUser("user2", profile2.id)
 
     customerStatus = await setupTests.generateCustomerStatus("Pendente de Documentação", 1, "DOC_PENDING")
+    await setupTests.generateCustomerStatus("Documentação aprovada", 6, "DOC_APPROVED")
+    await setupTests.generateCustomerStatus("Venda gerada", 7, "SALE_GENERATED")
     customer = await setupTests.generateCustomer(user.id, customerStatus.id)
 
     const { sale: saleGenerated, usersSales } = await setupTests.generateSale(customer.id, [user.id, user2.id])
