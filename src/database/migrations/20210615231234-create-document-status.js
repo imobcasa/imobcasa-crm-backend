@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       order: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
