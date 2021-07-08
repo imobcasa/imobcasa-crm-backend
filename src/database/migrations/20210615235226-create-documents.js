@@ -30,7 +30,7 @@ module.exports = {
         allowNull: false
       },
       size: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       customerId: {
         type: Sequelize.UUID,

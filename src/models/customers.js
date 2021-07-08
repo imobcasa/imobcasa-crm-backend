@@ -8,13 +8,13 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     phone: DataTypes.STRING,
     birthDate: DataTypes.DATE,
-    incomes: DataTypes.NUMBER,
-    fgts: DataTypes.NUMBER,
+    incomes: DataTypes.REAL,
+    fgts: DataTypes.REAL,
     startDate: DataTypes.DATE,
     origin: DataTypes.STRING,
     productInterest: DataTypes.STRING,
     regionInterest: DataTypes.STRING,
-    biddersQuantity: DataTypes.NUMBER,
+    biddersQuantity: DataTypes.INTEGER,
     userId: DataTypes.UUID,
     statusId: DataTypes.UUID
   }, {
