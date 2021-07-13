@@ -40,7 +40,7 @@ describe('USER CONTROLLER: tests', () => {
     }
   })
 
-  describe.only("LIST User tests", () => {
+  describe("LIST User tests", () => {
     it("Should return 400 if no x-profile Header has been provided", async () => {
       const req = mocks.mockReq(null, null, null, null, {
         'Authorization': 'Bearer ' + token

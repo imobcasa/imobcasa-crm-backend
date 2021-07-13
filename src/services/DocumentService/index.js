@@ -54,7 +54,7 @@ class DocumentService extends Service {
 
 
   async _checkCustomerRequiredDocuments(customerId){
-    const documentTypes = await this._documentTypesRepository.listCustomerTypes({ providedByCustomer: true })
+    const documentTypes = await this._documentTypesRepository.listRequiredTypes()
     
     for(const docType of documentTypes){
       const document = await this._documentsRepository.findByCustomerAndTypeId({
@@ -266,8 +266,10 @@ class DocumentService extends Service {
 
     this._checkEntityExsits(document, "id")
 
+    const documentType = await this._documentTypesRepository.getOne({ id: fields.typeId })
+
     this._checkEntityExsits(
-      await this._documentTypesRepository.getOne({ id: fields.typeId }),
+      documentType,
       "typeId"
     )
 
@@ -276,20 +278,27 @@ class DocumentService extends Service {
       typeId: fields.typeId
     })
 
-
-    const status = await this._documentStatusesRepository.getFirstStatus()
-    await this._documentsRepository.changeStatus({
-      id: fields.id,
-      statusId: status.id
-    })
-
-
-    if(await this._checkCustomerRequiredDocuments(document.customerId)){
-      await this._checkCustomerDocumentsStatuses(status.key, document.customerId)
+    if(documentType.providedByCustomer) {
+      const status = await this._documentStatusesRepository.getFirstStatus()
+      await this._documentsRepository.changeStatus({
+        id: fields.id,
+        statusId: status.id
+      })
+  
+      
+      if(await this._checkCustomerRequiredDocuments(document.customerId)){
+        await this._checkCustomerDocumentsStatuses(status.key, document.customerId)
+      }else {
+        await this._updateCustomerStatusByStatusKey(document.customerId, "DOC_PENDING")
+      }  
     }else {
-      await this._updateCustomerStatusByStatusKey(document.customerId, "DOC_PENDING")
-    }
-
+      const status = await this._documentStatusesRepository.getApprovedStatus()
+      await this._documentsRepository.changeStatus({
+        id: fields.id,
+        statusId: status.id
+      })  
+    }        
+  
     return result
   }
 

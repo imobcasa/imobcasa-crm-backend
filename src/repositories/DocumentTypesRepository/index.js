@@ -22,6 +22,15 @@ class DocumentTypesRepository {
     })
   }
 
+
+  async listRequiredTypes(){
+    return await DocumentTypes.findAll({
+      where: {
+        required: true
+      }
+    })
+  }
+
   
 }
 
