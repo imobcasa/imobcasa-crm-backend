@@ -37,7 +37,9 @@ class DocumentsRepository {
           association: "status",
           attributes: ["id", "name", "key", "order"]
         }
-      ]
+      ],
+      attributes: ['id', 'name', 'typeId', 'statusId', 'size', 'customerId', 'createdAt', 'updatedAt'],
+      
     })
   }
 

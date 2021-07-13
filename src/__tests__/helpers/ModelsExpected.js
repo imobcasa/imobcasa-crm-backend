@@ -94,7 +94,6 @@ class ModelsExpected {
     return {
       id: expect.any(String),
       name: expect.any(String),
-      url: expect.any(String),
       statusId: expect.any(String),
       size: expect.any(Number),
       customerId: expect.any(String),
