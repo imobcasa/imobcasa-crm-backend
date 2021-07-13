@@ -20,6 +20,16 @@ class DocumentStatusesRepository {
     })
   }
 
+  async getApprovedStatus(){
+    return await DocumentStatuses.findOne({
+      where: {
+        key: 'APPROVED'
+      }
+
+    })
+  }
+
+
 
   async list(){
     return await DocumentStatuses.findAll()

@@ -5,7 +5,8 @@ const { v4: uuidV4 } = require('uuid')
   const documentTypes = sequelize.define('documentTypes', {
     name: DataTypes.STRING,
     key: DataTypes.STRING,
-    providedByCustomer: DataTypes.BOOLEAN
+    providedByCustomer: DataTypes.BOOLEAN,
+    required: DataTypes.BOOLEAN,
   }, {
     hooks: {
       beforeCreate: (documentType) => {

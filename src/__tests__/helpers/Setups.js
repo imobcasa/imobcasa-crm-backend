@@ -35,10 +35,11 @@ class Setup {
   async generateDocumentType(
     name, 
     providedByCustomer, 
-    key
+    key,
+    required
   ){
     return await DocumentTypes.create(
-      mocks.mockDocumentTypes(name, providedByCustomer, key)
+      mocks.mockDocumentTypes(name, providedByCustomer, key, required)
       )
   }
 

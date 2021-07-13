@@ -127,11 +127,12 @@ class Mocks {
     }
   }
 
-  mockDocumentTypes(name = "Ficha", providedByCustomer = false, key = "FORM_DOC") {
+  mockDocumentTypes(name = "Ficha", providedByCustomer = false, key = "FORM_DOC", required = true) {
     return {
       name,
       providedByCustomer,
-      key
+      key,
+      required
     }
   }
 

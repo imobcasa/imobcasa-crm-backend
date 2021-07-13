@@ -9,6 +9,7 @@ module.exports = {
         name: 'Ficha',
         providedByCustomer: true,
         key: "FORM_DOC",
+        required: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -17,6 +18,7 @@ module.exports = {
         name: 'RG',
         providedByCustomer: true,
         key: "RG_DOC",
+        required: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -25,6 +27,7 @@ module.exports = {
         name: 'Certidão de estado civíl',
         providedByCustomer: true,
         key: "CIVIL_STATUS_DOC",
+        required: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -33,6 +36,7 @@ module.exports = {
         name: 'Comprovante de renda',
         providedByCustomer: true,
         key: "INCOMES_DOC",
+        required: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -41,6 +45,7 @@ module.exports = {
         name: 'Comprovante de endereço',
         providedByCustomer: true,
         key: "ADDRESS_DOC",
+        required: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -49,6 +54,7 @@ module.exports = {
         name: 'Carteira de trabalho',
         providedByCustomer: true,
         key: "WORK_DOC",
+        required: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -57,6 +63,7 @@ module.exports = {
         name: 'Extrato FGTS',
         providedByCustomer: true,
         key: "FGTS_DOC",
+        required: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -65,6 +72,7 @@ module.exports = {
         name: 'Imposto de renda',
         providedByCustomer: true,
         key: "INCOMES_DECLARATION_DOC",
+        required: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -73,6 +81,7 @@ module.exports = {
         name: 'Comprovação de dependentes',
         providedByCustomer: true,
         key: "DEPENDENTS_DOC",
+        required: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -81,6 +90,7 @@ module.exports = {
         name: 'Outros',
         providedByCustomer: true,
         key: "OTHER_DOC",
+        required: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -89,6 +99,7 @@ module.exports = {
         name: 'Comprovante comissão corretor',
         key: "BROKER_COMMISSION_VOUCHER_DOC",
         providedByCustomer: false,
+        required: false,
         createdAt: new Date(),
         updatedAt: new Date()
       }
