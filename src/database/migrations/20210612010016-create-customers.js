@@ -23,10 +23,10 @@ module.exports = {
         type: Sequelize.DATE
       },
       incomes: {
-        type: Sequelize.NUMBER
+        type: Sequelize.REAL
       },
       fgts: {
-        type: Sequelize.NUMBER
+        type: Sequelize.REAL
       },
       startDate: {
         type: Sequelize.DATE
@@ -41,7 +41,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       biddersQuantity: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       userId: {
         type: Sequelize.UUID,

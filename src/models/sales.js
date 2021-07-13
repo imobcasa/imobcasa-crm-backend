@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     projectName: DataTypes.STRING,
     unityName: DataTypes.STRING,
     tower: DataTypes.STRING,
-    value: DataTypes.NUMBER,
+    value: DataTypes.REAL,
     observations: DataTypes.STRING
   }, {
     hooks: {
