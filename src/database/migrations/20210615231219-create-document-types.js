@@ -22,6 +22,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.BOOLEAN
       },
+      required: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
       key: {
         allowNull: false,
         type: Sequelize.STRING
