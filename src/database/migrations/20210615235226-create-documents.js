@@ -13,6 +13,9 @@ module.exports = {
       url: {
         type: Sequelize.STRING
       },
+      key: {
+        type: Sequelize.STRING
+      },
       typeId: {
         type: Sequelize.UUID,
         references: {

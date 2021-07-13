@@ -7,6 +7,8 @@ const {
   CustomerStatusesRepository
 } = require('../../repositories')
 
+const generatePreSignedUrl = require('../../implementations/generatePresignedUrl')
+
 class DocumentService extends Service {
 
   _createRequiredFields = [
@@ -40,6 +42,10 @@ class DocumentService extends Service {
   ]
 
   _deleteRequiredFields = [
+    "x-document-id"
+  ]
+
+  _geturlRequiredFields = [
     "x-document-id"
   ]
 
@@ -151,8 +157,10 @@ class DocumentService extends Service {
     const  {
       originalname : name,
       size,
-      customerId
+      customerId,
+      key
     } = fields    
+    console.log(fields)
 
     const storage = process.env.NODE_ENV === "test" ? "local" : process.env.STORAGE_TYPE
     const url = storage === "s3" ? fields.location : fields.path
@@ -169,6 +177,7 @@ class DocumentService extends Service {
       url,
       statusId: status.id,
       size,
+      key,
       customerId
     })
   }
@@ -336,6 +345,16 @@ class DocumentService extends Service {
 
 
     return resultDelete
+  }
+
+  async getUrl(fields){
+    this._checkRequiredFields(this._geturlRequiredFields, fields)
+
+    const document = await this._documentsRepository.getOne({ id: fields['x-document-id'] })
+    this._checkEntityExsits(document, 'x-document-id')
+
+    
+    return await generatePreSignedUrl(document.key)
   }
 
 }

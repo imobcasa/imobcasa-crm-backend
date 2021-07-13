@@ -17,6 +17,7 @@ class DocumentsController {
   updateFilePath = "/documents/file"
   listStatusesPath = "/documents/status/list"
   listTypesPath = "/documents/types/list"
+  getUrlPath = "/documents/file/url"
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -32,8 +33,8 @@ class DocumentsController {
       (req, res, next) => {
         req.socket.setTimeout(4000)
         next()
-      },     
-      this.fileUploadMid.catchFile().single("file"),      
+      },
+      this.fileUploadMid.catchFile().single("file"),
       this.authenticationMid.checkAuthentication,
       this.create)
 
@@ -46,6 +47,10 @@ class DocumentsController {
     this.routes.get(this.basePath,
       this.authenticationMid.checkAuthentication,
       this.listByCustomer)
+
+    this.routes.route(this.getUrlPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .get(this.getUrl)
 
     this.routes.route(this.updateStatusPath)
       .all(this.authenticationMid.checkAuthentication)
@@ -65,14 +70,14 @@ class DocumentsController {
       .get(this.listDocumentTypesCustomer)
 
     this.routes.delete(
-      this.basePath, 
-      this.authenticationMid.checkAuthentication, 
+      this.basePath,
+      this.authenticationMid.checkAuthentication,
       this.deleteDocument)
 
   }
 
   async create(req, res) {
-    try {      
+    try {
       const documentService = new DocumentService()
       const data = await documentService.create({
         ...req.body,
@@ -96,6 +101,24 @@ class DocumentsController {
     try {
       const documentService = new DocumentService()
       const data = await documentService.listByCustomer(req.headers)
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async getUrl(req, res) {
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.getUrl(req.headers)
       return res.status(200).json(data)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -203,7 +226,7 @@ class DocumentsController {
     }
   }
 
-  async deleteDocument(req, res){
+  async deleteDocument(req, res) {
     try {
       const documentService = new DocumentService()
       const data = await documentService.deleteDocument(req.headers)
