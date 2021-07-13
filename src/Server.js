@@ -22,7 +22,7 @@ class Server {
   _loadMiddlewares(){
     this.app.use(cors({
       credentials: true,
-      origin: ["http://localhost:3000", "https://imobcasa-crm-backend.herokuapp.com"]
+      origin: ["http://localhost:3000", "https://imobcasa-crm.netlify.app"]
     }))
     this.app.use(express.json())
     this.app.use(express.urlencoded({extended: true}))
