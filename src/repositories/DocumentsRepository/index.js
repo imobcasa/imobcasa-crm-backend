@@ -8,6 +8,7 @@ class DocumentsRepository {
     url,
     statusId,
     size,
+    key,
     customerId
   }) {
     return await Documents.create({
@@ -15,6 +16,7 @@ class DocumentsRepository {
       url,
       statusId,
       size,
+      key,
       customerId
     }, {
       include: ['customer', 'status', 'type']
@@ -35,7 +37,9 @@ class DocumentsRepository {
           association: "status",
           attributes: ["id", "name", "key", "order"]
         }
-      ]
+      ],
+      attributes: ['id', 'name', 'typeId', 'statusId', 'size', 'customerId', 'createdAt', 'updatedAt'],
+      
     })
   }
 

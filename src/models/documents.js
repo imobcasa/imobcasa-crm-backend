@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   const documents = sequelize.define('documents', {
     name: DataTypes.STRING,
     url: DataTypes.STRING,
+    key: DataTypes.STRING,
     typeId: DataTypes.UUID,
     statusId: DataTypes.UUID,
     size: DataTypes.NUMBER,
