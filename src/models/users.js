@@ -5,13 +5,13 @@ const { v4: uuidV4 } = require('uuid')
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
 
 module.exports = (sequelize, DataTypes) => {
-  const user = sequelize.define('Users', {    
+  const user = sequelize.define('Users', { 
     fullName: DataTypes.STRING,
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     phone: DataTypes.STRING,
     profileId: DataTypes.UUID,
-    managerId: DataTypes.UUID,    
+    managerId: DataTypes.STRING,    
     password: DataTypes.STRING,
   }, {
     freezeTableName: true,

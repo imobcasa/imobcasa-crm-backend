@@ -31,7 +31,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       managerId: {
-        type: Sequelize.UUID,
+        type: Sequelize.STRING,
         allowNull: true
       },
       createdAt: {
