@@ -160,7 +160,6 @@ class DocumentService extends Service {
       customerId,
       key
     } = fields    
-    console.log(fields)
 
     const storage = process.env.NODE_ENV === "test" ? "local" : process.env.STORAGE_TYPE
     const url = storage === "s3" ? fields.location : fields.path
