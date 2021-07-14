@@ -29,7 +29,8 @@ db.Users.belongsTo(db.Profiles, {
 })
 
 db.Users.hasMany(db.Customers, {
-    onDelete: 'SET NULL'
+    onDelete: 'SET NULL',
+    foreignKey: 'userId'
 })
 
 db.Customers.belongsTo(db.Users, {
@@ -45,7 +46,8 @@ db.Customers.belongsTo(db.CustomerStatuses, {
 })
 
 db.Customers.hasOne(db.Sales, {
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
+    foreignKey: 'customerId'
 })
 
 db.Sales.belongsTo(db.Customers, {
@@ -55,7 +57,8 @@ db.Sales.belongsTo(db.Customers, {
 })
 
 db.Sales.hasMany(db.UsersSales, {
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
+    foreignKey: 'saleId',
 })
 
 db.UsersSales.belongsTo(db.Users, {
@@ -77,16 +80,32 @@ db.Documents.belongsTo(db.DocumentStatuses, {
     as: 'status'
 })
 
+db.DocumentStatuses.hasMany(db.Documents, {
+    foreignKey: 'statusId',
+})
+
+
 db.Documents.belongsTo(db.DocumentTypes, {
     foreignKey: 'typeId',
     targetKey: "id",
     as: 'type'
 })
 
+db.DocumentTypes.hasMany(db.Documents, {
+    foreignKey: 'typeId',
+})
+
+
 db.Documents.belongsTo(db.Customers, {
     foreignKey: 'customerId',
     targetKey: "id",
     as: 'customer'
+})
+
+
+db.Customers.hasMany(db.Documents, {
+    onDelete: 'CASCADE',
+    foreignKey: 'customerId',
 })
 
 
