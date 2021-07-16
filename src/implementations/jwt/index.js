@@ -5,7 +5,11 @@ class JwtImplementation {
   publicKey = process.env.PUBLIC_KEY.replace(/\\n/gm, '\n')
 
 
+
   async generateAccessToken(id, profile){
+    console.log("privateKey", this.privateKey)
+    console.log("publicKey", this.publicKey)
+
     return await jwt.sign({id, profile}, this.privateKey, {
       expiresIn: "1d",
       algorithm: 'RS256'
@@ -13,6 +17,8 @@ class JwtImplementation {
   }
 
   async generateRefreshToken(id, profile){    
+    console.log("privateKey", this.privateKey)
+    console.log("publicKey", this.publicKey)
     return await jwt.sign({id, profile}, this.privateKey, {
       expiresIn: "30d",
       algorithm: 'RS256'
