@@ -1,5 +1,5 @@
 'use strict';
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 const path = require('path')
 const { v4: uuidV4 } = require('uuid')
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
