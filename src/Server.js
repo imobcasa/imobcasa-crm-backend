@@ -7,6 +7,7 @@ require('dotenv').config({path: path.resolve(__dirname, '..', '..', '.env')})
 class Server {
   port = process.env.PORT || 8000
   secret = process.env.JWT_SECRET
+  corsOrigins = ["http://localhost:3000", process.env.CRM_HOST]
   token = 'teste'
   controllers
 
@@ -22,7 +23,7 @@ class Server {
   _loadMiddlewares(){
     this.app.use(cors({
       credentials: true,
-      origin: ["http://localhost:3000", "http://prod.d2vbsiowpxlr4n.amplifyapp.com"]
+      origin: this.corsOrigins
     }))
     this.app.use(express.json())
     this.app.use(express.urlencoded({extended: true}))
