@@ -38,7 +38,7 @@ class DocumentsRepository {
           attributes: ["id", "name", "key", "order"]
         }
       ],
-      attributes: ['id', 'name', 'typeId', 'statusId', 'size', 'customerId', 'createdAt', 'updatedAt'],
+      attributes: ['id', 'name', 'typeId', 'statusId', 'size', 'customerId', 'createdAt', 'updatedAt', 'comments'],
       
     })
   }
@@ -127,6 +127,16 @@ class DocumentsRepository {
       }
     })
   }  
+
+  async updateComment({ id, comments }) {
+    return await Documents.update({
+      comments
+    }, {
+      where: {
+        id
+      }
+    })
+  }
 
 }
 
