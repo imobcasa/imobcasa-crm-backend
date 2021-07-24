@@ -29,8 +29,9 @@ class CustomerStatusesController {
   
   async listAll(req, res){
     try {
+      console.log(req.locals)
       const customerStatusesService = new CustomerStatusesService()
-      const user = await customerStatusesService.listAll()
+      const user = await customerStatusesService.listAll(req.locals)
       return res.status(200).json(user)
     } catch (err) {
       if (err instanceof ServiceException) {

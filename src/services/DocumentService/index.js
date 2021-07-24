@@ -1,13 +1,14 @@
 const Service = require('../Service')
-const { 
-  DocumentTypesRepository, 
-  DocumentStatusesRepository, 
+const {
+  DocumentTypesRepository,
+  DocumentStatusesRepository,
   DocumentsRepository,
   CustomerRepository,
   CustomerStatusesRepository
 } = require('../../repositories')
 
 const generatePreSignedUrl = require('../../implementations/generatePresignedUrl')
+const { createCipher } = require('crypto')
 
 class DocumentService extends Service {
 
@@ -49,7 +50,12 @@ class DocumentService extends Service {
     "x-document-id"
   ]
 
-  constructor(){
+  _addCommentRequiredFields = [
+    "x-document-id",
+    "comments"
+  ]
+
+  constructor() {
     super()
     this._documentTypesRepository = new DocumentTypesRepository()
     this._documentStatusesRepository = new DocumentStatusesRepository()
@@ -59,15 +65,15 @@ class DocumentService extends Service {
   }
 
 
-  async _checkCustomerRequiredDocuments(customerId){
+  async _checkCustomerRequiredDocuments(customerId) {
     const documentTypes = await this._documentTypesRepository.listRequiredTypes()
-    
-    for(const docType of documentTypes){
+
+    for (const docType of documentTypes) {
       const document = await this._documentsRepository.findByCustomerAndTypeId({
         customerId,
         typeId: docType.id
       })
-      if(!document){
+      if (!document) {
         return false
       }
     }
@@ -76,30 +82,30 @@ class DocumentService extends Service {
   }
 
 
-  async _checkCustomerDocumentsExistsByKeys(customerId, keys = []){
-    const docStatuses = await this._documentStatusesRepository.getByMultipleKeys({ 
+  async _checkCustomerDocumentsExistsByKeys(customerId, keys = []) {
+    const docStatuses = await this._documentStatusesRepository.getByMultipleKeys({
       keys: keys
     })
     const docStatusesIds = docStatuses.map(statusDoc => statusDoc.id)
-    const documentsFinded = await this._documentsRepository.findAllByMultipleStatuses({ ids:  docStatusesIds, customerId})
-    if(documentsFinded.length === 0){
+    const documentsFinded = await this._documentsRepository.findAllByMultipleStatuses({ ids: docStatusesIds, customerId })
+    if (documentsFinded.length === 0) {
       return false
     }
     return true
   }
 
-  async _updateCustomerStatusByStatusKey(customerId, statusKey){
+  async _updateCustomerStatusByStatusKey(customerId, statusKey) {
     const customerNewStatus = await this._customerStatusesRepository.getStatusByKey(statusKey)
-    if(customerNewStatus){
-      return await this._customerRepository.updateStatus({ 
+    if (customerNewStatus) {
+      return await this._customerRepository.updateStatus({
         statusId: customerNewStatus.id,
         customerId: customerId
       })
     }
-    
+
   }
 
-  _docStatusLevel({ key }){
+  _docStatusLevel({ key }) {
     return {
       ANALISIS: false,
       DENIED_DOCUMENTIST: true,
@@ -110,7 +116,7 @@ class DocumentService extends Service {
   }
 
 
-  _parseToCustomerStatus({ key }){
+  _parseToCustomerStatus({ key }) {
     return {
       ANALISIS: "DOC_ANALISIS",
       DENIED_DOCUMENTIST: "DOC_DENIED_DOCUMENTIST",
@@ -120,7 +126,7 @@ class DocumentService extends Service {
     }[key] || ""
   }
 
-  _deniedStatusDocsParseToCustomerStatus({ key }){
+  _deniedStatusDocsParseToCustomerStatus({ key }) {
     return {
       DENIED_DOCUMENTIST: "DOC_DENIED_DOCUMENTIST",
       DENIED_BANK: "DOC_DENIED_BANK",
@@ -128,22 +134,22 @@ class DocumentService extends Service {
     }[key] || false
   }
 
-  
-  async _checkCustomerDocumentsStatuses(statusKey, customerId){
-    if(this._deniedStatusDocsParseToCustomerStatus({ key: statusKey})){
-      const newCustomerStatusKey = this._deniedStatusDocsParseToCustomerStatus({ key: statusKey})
+
+  async _checkCustomerDocumentsStatuses(statusKey, customerId) {
+    if (this._deniedStatusDocsParseToCustomerStatus({ key: statusKey })) {
+      const newCustomerStatusKey = this._deniedStatusDocsParseToCustomerStatus({ key: statusKey })
       await this._updateCustomerStatusByStatusKey(customerId, newCustomerStatusKey)
-    }else if(!await this._checkCustomerDocumentsExistsByKeys(customerId, 
+    } else if (!await this._checkCustomerDocumentsExistsByKeys(customerId,
       [
         "DENIED_DOCUMENTIST",
         "DENIED_BANK",
         "DENIED"
       ])
-    ){  
-      if(await this._checkCustomerDocumentsExistsByKeys(customerId, ["ANALISIS"])){
+    ) {
+      if (await this._checkCustomerDocumentsExistsByKeys(customerId, ["ANALISIS"])) {
         const newCustomerStatusKey = this._parseToCustomerStatus({ key: "ANALISIS" })
         await this._updateCustomerStatusByStatusKey(customerId, newCustomerStatusKey)
-      }else {
+      } else {
         const newCustomerStatusKey = this._parseToCustomerStatus({ key: "APPROVED" })
         await this._updateCustomerStatusByStatusKey(customerId, newCustomerStatusKey)
       }
@@ -151,15 +157,15 @@ class DocumentService extends Service {
   }
 
 
-  async create(fields){ 
+  async create(fields) {
     this._checkRequiredFields(this._createRequiredFields, fields)
-    
-    const  {
-      originalname : name,
+
+    const {
+      originalname: name,
       size,
       customerId,
       key
-    } = fields    
+    } = fields
 
     const storage = process.env.NODE_ENV === "test" ? "local" : process.env.STORAGE_TYPE
     const url = storage === "s3" ? fields.location : fields.path
@@ -170,7 +176,7 @@ class DocumentService extends Service {
     )
 
     const status = await this._documentStatusesRepository.getFirstStatus()
-        
+
     return await this._documentsRepository.create({
       name,
       url,
@@ -181,25 +187,25 @@ class DocumentService extends Service {
     })
   }
 
-  async listByCustomer(fields){
+  async listByCustomer(fields) {
     this._checkRequiredFields(this._getByCustomerRequiredFields, fields)
 
     this._checkEntityExsits(
-      await this._customerRepository.getOne({ id: fields['x-customer-id']}),
+      await this._customerRepository.getOne({ id: fields['x-customer-id'] }),
       'x-customer-id'
     )
-        
+
     return await this._documentsRepository.listByCustomerId({
       customerId: fields['x-customer-id']
     })
   }
 
-  async changeStatus(fields){
+  async changeStatus(fields) {
     this._checkRequiredFields(this._changeStatusRequiredFies, fields)
 
-    const document = await this._documentsRepository.getOne({ id: fields.id })    
+    const document = await this._documentsRepository.getOne({ id: fields.id })
     this._checkEntityExsits(
-      document, 
+      document,
       "id"
     )
 
@@ -209,24 +215,24 @@ class DocumentService extends Service {
       status,
       "statusId"
     )
-    
+
     const result = await this._documentsRepository.changeStatus({
       id: fields.id,
       statusId: fields.statusId
     })
 
     //UPDATE IF CUSTOMER HAS ALL NECESSARY DOCUMENTATIONS
-    if(await this._checkCustomerRequiredDocuments(document.customerId)){
+    if (await this._checkCustomerRequiredDocuments(document.customerId)) {
       await this._checkCustomerDocumentsStatuses(status.key, document.customerId)
     }
-  
-        
+
+
     return result
   }
 
-  async changeFile(fields){
+  async changeFile(fields) {
     await this._checkRequiredFields(this._changeFileRequiredFields, fields)
-    
+
     const document = await this._documentsRepository.getOne({ id: fields['x-file-id'] })
 
     this._checkEntityExsits(
@@ -236,7 +242,7 @@ class DocumentService extends Service {
 
     const {
       originalname: name,
-      size,      
+      size,
     } = fields
 
     const storage = process.env.NODE_ENV === "test" ? "local" : process.env.STORAGE_TYPE
@@ -257,16 +263,16 @@ class DocumentService extends Service {
     })
 
 
-    if(await this._checkCustomerRequiredDocuments(document.customerId)){
+    if (await this._checkCustomerRequiredDocuments(document.customerId)) {
       await this._checkCustomerDocumentsStatuses(status.key, document.customerId)
-    }else {
+    } else {
       await this._updateCustomerStatusByStatusKey(document.customerId, "DOC_PENDING")
     }
 
     return result
   }
 
-  async changeType(fields){
+  async changeType(fields) {
     this._checkRequiredFields(this._changeTypeRequriedFields, fields)
 
 
@@ -286,35 +292,35 @@ class DocumentService extends Service {
       typeId: fields.typeId
     })
 
-    if(documentType.providedByCustomer) {
+    if (documentType.providedByCustomer) {
       const status = await this._documentStatusesRepository.getFirstStatus()
       await this._documentsRepository.changeStatus({
         id: fields.id,
         statusId: status.id
       })
-  
-      
-      if(await this._checkCustomerRequiredDocuments(document.customerId)){
+
+
+      if (await this._checkCustomerRequiredDocuments(document.customerId)) {
         await this._checkCustomerDocumentsStatuses(status.key, document.customerId)
-      }else {
+      } else {
         await this._updateCustomerStatusByStatusKey(document.customerId, "DOC_PENDING")
-      }  
-    }else {
+      }
+    } else {
       const status = await this._documentStatusesRepository.getApprovedStatus()
       await this._documentsRepository.changeStatus({
         id: fields.id,
         statusId: status.id
-      })  
-    }        
-  
+      })
+    }
+
     return result
   }
 
-  async listDocumentStatus(){
+  async listDocumentStatus() {
     return await this._documentStatusesRepository.list()
   }
 
-  async listDocumentTypesCustomer(fields){
+  async listDocumentTypesCustomer(fields) {
     this._checkRequiredFields(this._listTypesRequiredFiels, fields)
     const providedByCustomer = parseInt(fields['provided-customer'])
     return await this._documentTypesRepository.listCustomerTypes({
@@ -322,11 +328,11 @@ class DocumentService extends Service {
     })
   }
 
-  async deleteDocument(fields){
+  async deleteDocument(fields) {
     this._checkRequiredFields(this._deleteRequiredFields, fields)
-    
+
     const document = await this._documentsRepository.getOne({ id: fields['x-document-id'] })
-    
+
     this._checkEntityExsits(
       document,
       'x-document-id'
@@ -334,7 +340,7 @@ class DocumentService extends Service {
 
     const resultDelete = await this._documentsRepository.delete({ id: fields['x-document-id'] })
 
-    if(!await this._checkCustomerRequiredDocuments(document.customerId)){
+    if (!await this._checkCustomerRequiredDocuments(document.customerId)) {
       const customerStatus = await this._customerStatusesRepository.getStatusByKey("DOC_PENDING")
       await this._customerRepository.updateStatus({
         customerId: document.customerId,
@@ -346,14 +352,24 @@ class DocumentService extends Service {
     return resultDelete
   }
 
-  async getUrl(fields){
+  async getUrl(fields) {
     this._checkRequiredFields(this._geturlRequiredFields, fields)
 
     const document = await this._documentsRepository.getOne({ id: fields['x-document-id'] })
     this._checkEntityExsits(document, 'x-document-id')
 
-    
+
     return await generatePreSignedUrl(document.key)
+  }
+
+
+  async addComment(fields) {
+    this._checkRequiredFields(this._addCommentRequiredFields, fields)
+    const document = await this._documentsRepository.getOne({ id: fields['x-document-id'] })
+    this._checkEntityExsits(document, 'x-document-id')
+    const result = await this._documentsRepository.updateComment({ id: document.id, comments: fields.comments })
+    const [ rowsAffeted ] = result
+    return rowsAffeted === 1 ? true : false
   }
 
 }

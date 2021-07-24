@@ -9,8 +9,11 @@ class CustomerStatusesService extends Service {
   }
 
 
-  async listAll(){
-    return await this._customerStatusesRepository.listAll()
+  async listAll(fields){
+    const { profile } = fields
+    return await this._customerStatusesRepository.listAll({
+      profileName: profile.name.toUpperCase()
+    })
   }
 
 
