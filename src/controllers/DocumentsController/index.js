@@ -18,6 +18,7 @@ class DocumentsController {
   listStatusesPath = "/documents/status/list"
   listTypesPath = "/documents/types/list"
   getUrlPath = "/documents/file/url"
+  addCommentPath = "/documents/comments"
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -73,6 +74,11 @@ class DocumentsController {
       this.basePath,
       this.authenticationMid.checkAuthentication,
       this.deleteDocument)
+
+    this.routes.put(
+      this.addCommentPath,
+      this.authenticationMid.checkAuthentication,
+      this.addComment)
 
   }
 
@@ -244,6 +250,27 @@ class DocumentsController {
     }
   }
 
+
+  async addComment(req, res) {
+    try {
+      const documentService = new DocumentService()
+      const data = await documentService.addComment({
+        ...req.headers,
+        ...req.body
+      })
+      return res.status(200).json(data)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
 }
 
 module.exports = DocumentsController
