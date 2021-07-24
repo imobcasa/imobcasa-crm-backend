@@ -3,6 +3,15 @@ const { CustomerStatuses } = require('../../models')
 
 
 
+const docEnuns = {
+  DOCUMENTISTA: ['DOC_ANALISIS', 'DOC_DENIED_DOCUMENTIST', 'DOC_DENIED_BANK', 'DOC_APPROVED', 'DENIED'],
+  FINANCEIRO: ['SALE_GENERATED'],
+  GESTOR: ['DOC_PENDING', 'DOC_ANALISIS', 'DOC_DENIED_DOCUMENTIST', 'DOC_DENIED_BANK', 'DOC_APPROVED', 'DENIED', 'SALE_GENERATED', 'DONE'],
+  CORRETOR: ['DOC_PENDING', 'DOC_ANALISIS', 'DOC_DENIED_DOCUMENTIST', 'DOC_DENIED_BANK', 'DOC_APPROVED', 'DENIED', 'SALE_GENERATED', 'DONE'],
+  ADMINISTRADOR: ['DOC_PENDING', 'DOC_ANALISIS', 'DOC_DENIED_DOCUMENTIST', 'DOC_DENIED_BANK', 'DOC_APPROVED', 'DENIED', 'SALE_GENERATED', 'DONE'],
+}
+
+
 class CustomerStatusesRepository {
 
  
@@ -27,9 +36,16 @@ class CustomerStatusesRepository {
     })
   }
 
-  async listAll(){
-    return await CustomerStatuses.findAll()
+  async listAll({ profileName }){
+    return await CustomerStatuses.findAll({
+      where: {
+        key: {
+          [Op.in]: docEnuns[profileName]
+        }
+      }
+    })
   }
+
   
   
 }
