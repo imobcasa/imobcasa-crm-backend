@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     typeId: DataTypes.UUID,
     statusId: DataTypes.UUID,
     size: DataTypes.NUMBER,
-    customerId: DataTypes.UUID
+    customerId: DataTypes.UUID,
+    comments: DataTypes.STRING,
   }, {
     hooks: {
       beforeCreate: (document) => {
